@@ -26,6 +26,9 @@ on init
     mkdir /system
     mkdir /data 0771 system system
     mkdir /cache 0770 system cache
+#ifdef VENDOR_EDIT//rendong.shi@BasicDrv.USB,2014/12/23, Modify for oppo_custom partition
+	symlink /dev/block/platform/mtk-msdc.0/by-name/oppo_custom /dev/oppo_custom
+#endif
     #Create CIP mount point
     mkdir /custom
 
@@ -48,17 +51,8 @@ on init
     mkdir /storage/usbotg 0700 root root
 # mount different fs start
 
-on charger-fs
-    mount_all /fstab.charger
-    exec /system/bin/tune2fs -O has_journal -u 10010 -r 4096 /dev/block/platform/mtk-msdc.0/by-name/userdata
-    chown root /remount.sh
-    chmod 700 /remount.sh
-    exec /remount.sh
-
-
 on charger
     mount ext4 /dev/block/platform/mtk-msdc.0/by-name/system /system ro wait
-
     start fuelgauged
     start kpoc_charger
     start servicemanager
@@ -94,14 +88,21 @@ on fs
     exec /system/bin/chown root:system /dev/block/platform/mtk-msdc.0/by-name/secro
     exec /system/bin/chmod 0660 /dev/block/platform/mtk-msdc.0/by-name/seccfg
     exec /system/bin/chown root:system /dev/block/platform/mtk-msdc.0/by-name/seccfg
+#ifdef VENDOR_EDIT//rendong.shi@BasicDrv.USB,2014/12/23, Modify for oppo_custom partition      	
+    exec /system/bin/chmod 0660 /dev/block/platform/mtk-msdc.0/by-name/oppo_custom	
+    exec /system/bin/chown root:system /dev/block/platform/mtk-msdc.0/by-name/oppo_custom
+#endif
 
     write /proc/bootprof "INIT:Mount_END"
 
 # mount different fs end
 
 on fs
-
-   mount iso9660 loop@/system/etc/iAmCdRom.iso /mnt/cd-rom ro
+#ifndef VENDOR_EDIT//rendong.shi@BasicDrv.USB,2014/12/22, Modify for cd-rom
+#   mount iso9660 loop@/system/etc/iAmCdRom.iso /mnt/cd-rom ro
+#else
+   mount iso9660 loop@/system/etc/DRIVER.ISO /mnt/cd-rom ro
+#endif 
 
 on post-fs
 
@@ -112,7 +113,7 @@ on post-fs
     chmod 0770 /protect_s
     # once everything is setup, no need to modify /
     mount rootfs rootfs / ro remount
-
+    
     chown system system /system/bin/sbchk
     chmod 0771 /system/bin/sbchk
 
@@ -487,7 +488,7 @@ on post-fs-data
     chmod 0660 /dev/kd_camera_hw_bus2
     chmod 0660 /dev/FM50AF
     chmod 0660 /dev/CAM_CAL_DRV
-    chmod 0660 /dev/OV13853_CAM_CAL_DRV
+    chmod 0660 /dev/DW9718AF
 
     chown system camera /dev/camera-sysram
     chown system camera /dev/camera-isp
@@ -498,7 +499,7 @@ on post-fs-data
     chown system camera /dev/kd_camera_hw_bus2
     chown system camera /dev/FM50AF
     chown system camera /dev/CAM_CAL_DRV
-    chown system camera /dev/OV13853_CAM_CAL_DRV
+    chown system camera /dev/DW9718AF
 
     #MATV
     chmod 0660 /dev/MATV
@@ -581,15 +582,16 @@ on boot
     chown root system /sys/module/page_alloc/parameters/log_order_threshold
     chmod 0664 /sys/module/page_alloc/parameters/log_order_threshold
 
-    write /proc/sys/vm/dirty_writeback_centisecs 300
+    #write /proc/sys/vm/dirty_writeback_centisecs 300
+    # ifdef VENDOR_EDIT	//jingchun.wang@phone.bsp 2015-07-08 modify for improve mtp performance
+    write /proc/sys/vm/dirty_writeback_centisecs 500
+    #endif //VENDOR_EDIT
 
     chown radio system /sys/power/vcorefs/pwr_ctrl
 	  chmod 0660 /sys/power/autosleep
     chown system radio /sys/class/leds/lcd-backlight/brightness
     chmod 0664 /sys/class/leds/lcd-backlight/brightness
-    chown system radio /sys/class/leds/flashlight/brightness
-    chmod 0664 /sys/class/leds/flashlight/brightness
-    
+
     chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_rate
     chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_rate
     chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_slack
@@ -620,7 +622,7 @@ on boot
     chmod 0660 /d/ged/hal/custom_boost_gpu_freq
     chown system system /d/ged/hal/custom_upbound_gpu_freq
     chmod 0660 /d/ged/hal/custom_upbound_gpu_freq
-
+        
 # Smartbook Handler Framework
     chown system system /sys/power/sb_state
     chmod 0660 /sys/power/sb_state
@@ -731,7 +733,7 @@ on property:vold.decrypt=trigger_restart_framework
     start start_modem
     start msensord
     start permission_check
-
+		
 on property:vold.decrypt=trigger_shutdown_framework
     start stop_modem
 
@@ -748,25 +750,6 @@ service start_modem /system/bin/md_ctrl 1
 ## mtk printk uart controller
 on property:persist.uartconsole.enable=1
     write /proc/mtprintk 1
-
-## performance mode switch
-on property:persist.sys.aries.power_profile=high
-    start perfmode
-
-service perfmode /system/bin/thermal_manager  /system/etc/.tp/thermal.off.conf
-    user root
-    group root
-    oneshot
-    disabled
-
-on property:persist.sys.aries.power_profile=middle
-    start normalmode
-
-service normalmode /system/bin/thermal_manager  /system/etc/.tp/thermal.conf
-    user root
-    group root
-    oneshot
-    disabled
 
 # Update the second boot logo
 service bootlogoupdater /system/bin/boot_logo_updater
@@ -938,19 +921,36 @@ service dhcpcd_p2p /system/bin/dhcpcd -BK -dd
     disabled
     oneshot
 
+#ifndef VENDOR_EDIT
+#ZhangPan@Mobile Phone Software Dept.Driver, 2015/05/14, Modify for change dhcp authority
+#service iprenew_wlan0 /system/bin/dhcpcd -n
+#    class main
+#	user dhcp
+#	group net_admin net_raw
+#    disabled
+#    oneshot
+#
+#service iprenew_p2p /system/bin/dhcpcd -n
+#    class main
+#	user dhcp
+#	group net_admin net_raw
+#    disabled
+#    oneshot
+#else /* VENDOR_EDIT */
 service iprenew_wlan0 /system/bin/dhcpcd -n
     class main
-	user dhcp
+	user root
 	group net_admin net_raw
     disabled
     oneshot
 
 service iprenew_p2p /system/bin/dhcpcd -n
     class main
-	user dhcp
+	user root
 	group net_admin net_raw
     disabled
     oneshot
+#endif /* VENDOR_EDIT */
 
 service dhcp_inform /system/bin/dhcpcd -s -BK -A
     class main
@@ -1043,10 +1043,10 @@ service cmmb /system/bin/cmmbsp
     group system audio camera graphics inet net_bt net_bt_admin net_bw_acct media
     ioprio rt 4
 
-#service enableswap /system/bin/sh /enableswap.sh
-#   class core
-#   oneshot
-#   seclabel u:r:enableswap:s0
+service enableswap /system/bin/sh /enableswap.sh
+    class core
+    oneshot
+    seclabel u:r:enableswap:s0
 
 service matv /system/bin/matv
     class main
@@ -1080,7 +1080,6 @@ service mtkbt /system/bin/mtkbt
 	socket bt.a2dp.stream dgram 660 bluetooth net_bt
 	user bluetooth
 	group system vpn net_admin inet net_raw net_bt bluetooth net_bt_admin net_bt_stack sdcard_r
-	oneshot
 
 #
 #  External Modme control related services
@@ -1195,6 +1194,11 @@ service memsicd3416x /system/bin/memsicd3416x
     user system
     group system
     class main
+	
+service psensord /system/bin/psensord
+    user system
+    group system
+    class main
 
 service akmd8975 /system/bin/akmd8975
     disabled
@@ -1207,6 +1211,17 @@ service akmd8963 /system/bin/akmd8963
     user system
     group system
     class main
+	
+#ifdef VENDOR_EDIT
+#ziqing.guo@BasicDrv.Sensor, 2014/12/25, add for sensor nvram
+service nvram_sensor /system/bin/nvram_sensor
+	user root
+    group system 
+    oneshot
+    disabled
+on property:service.nvram_init=Ready
+	start nvram_sensor
+#endif
 
 service akmd09911 /system/bin/akmd09911
     disabled
@@ -1316,7 +1331,6 @@ service thermal_manager /system/bin/thermal_manager
     class main
     user root
     oneshot
-    disabled
 
 service thermal /system/bin/thermal
     class main
@@ -1333,10 +1347,24 @@ service fuelgauged /system/bin/fuelgauged
     user system
     group system
 
+#ifndef VENDOR_EDIT
+#Fangfang.Hui@Swdp.Android.Usb&Storage, 2015/06/09, Modify for 
+#service sn /system/bin/sn
+#    class main
+#    user root
+#    oneshot
+#else /* VENDOR_EDIT */
 service sn /system/bin/sn
     class main
     user root
     oneshot
+    disabled
+
+on property:persist.oppo.sn.enabled=true
+    start sn
+#endif /* VENDOR_EDIT */
+
+
 
 service backuprestore /system/bin/br_app_data_service
 	class main
@@ -1351,10 +1379,13 @@ service poad /system/bin/poad
     oneshot
 
 #monitor battery status
-service batterywarning /system/bin/batterywarning
-    class main
-    user shell
-    group shell
+#ifndef VENDOR_EDIT
+#JianRong.Zheng@Swdp.Android.Power, 2015/05/08, Remove for 
+#service batterywarning /system/bin/batterywarning
+#    class main
+#    user shell
+#    group shell
+#endif /* VENDOR_EDIT */
 
 #service BGW /system/xbin/BGW
 #	user system
@@ -1380,4 +1411,18 @@ service sbchk /system/bin/sbchk
     user system
     group system
     oneshot
+    
+#ifndef VENDOR_EDIT
+#JianRong.Zheng@Swdp.Android.Power, 2014/11/25, Add for 
+on property:sys.engineermode.chargeswitch=true
+    write /sys/class/power_supply/battery/MMI_Test_Charging_Enable 1
 
+on property:sys.engineermode.chargeswitch=false
+    write /sys/class/power_supply/battery/MMI_Test_Charging_Enable 0 
+	
+service engineermode-sh /system/bin/sh /init.oppo.engineermode.sh
+    class late_start
+	user root
+    oneshot
+#endif /* VENDOR_EDIT */
+    

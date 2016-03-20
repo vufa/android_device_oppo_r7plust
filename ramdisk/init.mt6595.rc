@@ -35,7 +35,8 @@ on init
 # change lk_env permission
     chown root system /proc/lk_env
     chmod 0660 /proc/lk_env
-
+    #linyingpiao@camera chmod /dev/stmvl6180_ranging to test Laser AF in factory mode	108
+    chown system system /dev/stmvl6180_ranging
 #usbotg
     mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
     mkdir /storage/usbotg 0700 root root
@@ -618,6 +619,7 @@ on boot
 	  chown system system /sys/class/leds/red/trigger
 	  chown system system /sys/class/leds/green/trigger
 	  chown system system /sys/class/leds/blue/trigger
+	  chown system system /sys/class/leds/white/trigger
 
     # Permission for hibernation
     chown radio system /sys/power/tuxonice
@@ -1031,7 +1033,6 @@ service mtkbt /system/bin/mtkbt
 	socket bt.a2dp.stream dgram 660 bluetooth net_bt
 	user bluetooth
 	group system vpn net_admin inet net_raw net_bt bluetooth net_bt_admin net_bt_stack sdcard_r
-	oneshot
 
 #
 #  External Modme control related services

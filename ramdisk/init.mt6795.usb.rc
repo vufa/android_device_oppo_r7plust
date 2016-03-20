@@ -1,10 +1,14 @@
 on boot
-    setprop sys.usb.vid 2717
-    write /sys/class/android_usb/android0/iManufacturer Xiaomi
+#ifndef VENDOR_EDIT//Jinquan.Lin@BasicDrv.USB, 2012/05/23, Modify for customizing VID&PID
+    setprop sys.usb.vid 0E8D
+#else
+    setprop sys.usb.vid 22d9
+#endif
+    write /sys/class/android_usb/android0/iManufacturer MediaTek
     write /sys/class/android_usb/android0/iProduct ${ro.product.model}
     write /sys/class/android_usb/android0/iSerial ${ro.serialno}
     write /sys/class/android_usb/android0/f_rndis/wceis 1
-    write /sys/class/android_usb/android0/f_rndis/manufacturer Xiaomi
+    write /sys/class/android_usb/android0/f_rndis/manufacturer MediaTek
     write /sys/class/android_usb/android0/f_rndis/vendorID ${sys.usb.vid}
     chown system system /sys/class/android_usb/android0/f_acm/port_index
     chmod 0660 /sys/class/android_usb/android0/f_acm/port_index
@@ -19,7 +23,11 @@ on fs
 on property:sys.usb.config=acm
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct 2007
+#ifndef VENDOR_EDIT//Jinquan.Lin@BasicDrv.USB, 2012/05/23, Modify for customizing VID&PID    
+ #   write /sys/class/android_usb/android0/idProduct 2007
+ #else
+     write /sys/class/android_usb/android0/idProduct 0006
+ #endif   
     write /sys/class/android_usb/android0/f_acm/instances 1
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/bDeviceClass 02
@@ -30,7 +38,11 @@ on property:sys.usb.config=acm
 on property:sys.usb.config=adb
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff08
+#ifndef VENDOR_EDIT//Jinquan.Lin@BasicDrv.USB, 2012/05/23, Modify for customizing VID&PID
+ #   write /sys/class/android_usb/android0/idProduct 201C
+#else/* VENDOR_EDIT */
+    write /sys/class/android_usb/android0/idProduct 2769
+#endif/* VENDOR_EDIT */
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     start adbd
@@ -51,7 +63,11 @@ on property:sys.usb.config=adb,acm
 on property:sys.usb.config=mass_storage
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff20
+#ifndef VENDOR_EDIT//zhanhua.li@BasicDrv.USB,2013/09/14, Modify for customizing VID&PID
+#   write /sys/class/android_usb/android0/idProduct 2002
+#else/* VENDOR_EDIT */
+    write /sys/class/android_usb/android0/idProduct 2768
+#endif/* VENDOR_EDIT */
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state ${sys.usb.config}
@@ -60,7 +76,11 @@ on property:sys.usb.config=mass_storage
 on property:sys.usb.config=mass_storage,adb
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff28
+#ifndef VENDOR_EDIT//Jinquan.Lin@BasicDrv.USB, 2012/05/23, Modify for customizing VID&PID
+#   write /sys/class/android_usb/android0/idProduct 2003
+#else/* VENDOR_EDIT */
+    write /sys/class/android_usb/android0/idProduct 2767
+#endif/* VENDOR_EDIT */
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     start adbd
@@ -70,7 +90,11 @@ on property:sys.usb.config=mass_storage,adb
 on property:sys.usb.config=mtp
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff40
+#ifndef VENDOR_EDIT//zhanhua.li@BasicDrv.USB,2013/09/14, Modify for customizing VID&PID   
+#   write /sys/class/android_usb/android0/idProduct 2008
+#else/* VENDOR_EDIT */    
+    write /sys/class/android_usb/android0/idProduct 2764
+#endif/* VENDOR_EDIT */        
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state ${sys.usb.config}
@@ -89,7 +113,11 @@ on property:sys.usb.config=mtp,acm
 on property:sys.usb.config=mtp,adb
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff48
+#ifndef VENDOR_EDIT//zhanhua.li@BasicDrv.USB,2013/09/14, Modify for customizing VID&PID 
+#   write /sys/class/android_usb/android0/idProduct 201D
+#else/* VENDOR_EDIT */   
+    write /sys/class/android_usb/android0/idProduct 2765
+#endif/* VENDOR_EDIT */      
     write /sys/class/android_usb/android0/functions mtp,adb
     write /sys/class/android_usb/android0/enable 1
     start adbd
@@ -110,8 +138,16 @@ on property:sys.usb.config=mtp,adb,acm
 on property:sys.usb.config=mtp,mass_storage
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff60
+#ifndef VENDOR_EDIT//zhanhua.li@BasicDrv.USB,2013/09/14, Modify for customizing VID&PID   
+#   write /sys/class/android_usb/android0/idProduct 2016
+#else
+    write /sys/class/android_usb/android0/idProduct 2773
+#endif   
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
+#ifdef VENDOR_EDIT//rendong.shi@BasicDrv.USB,2014/12/22, Modify for cd-rom     	
+    write /sys/class/android_usb/android0/f_mass_storage/bicr 1	
+    write /sys/class/android_usb/android0/f_mass_storage/lun/file "/dev/block/loop0"	
+#endif/* VENDOR_EDIT */
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state ${sys.usb.config}
 
@@ -119,8 +155,16 @@ on property:sys.usb.config=mtp,mass_storage
 on property:sys.usb.config=mtp,mass_storage,adb
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff68
+#ifndef VENDOR_EDIT//zhanhua.li@BasicDrv.USB,2013/09/14, Modify for customizing VID&PID
+#    write /sys/class/android_usb/android0/idProduct 2017
+#else
+      write /sys/class/android_usb/android0/idProduct 2774
+#endif
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
+#ifdef VENDOR_EDIT//rendong.shi@BasicDrv.USB,2014/12/22, Modify for cd-rom     	
+    write /sys/class/android_usb/android0/f_mass_storage/bicr 1	
+    write /sys/class/android_usb/android0/f_mass_storage/lun/file "/dev/block/loop0"	
+#endif/* VENDOR_EDIT */
     write /sys/class/android_usb/android0/enable 1
     start adbd
     setprop sys.usb.state ${sys.usb.config}
@@ -129,7 +173,11 @@ on property:sys.usb.config=mtp,mass_storage,adb
 on property:sys.usb.config=ptp
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff10
+#ifndef VENDOR_EDIT//zhanhua.li@BasicDrv.USB,2013/09/14, Modify for customizing VID&PID
+#    write /sys/class/android_usb/android0/idProduct 200B
+#else
+     write /sys/class/android_usb/android0/idProduct 2771
+#endif
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state ${sys.usb.config}
@@ -148,7 +196,11 @@ on property:sys.usb.config=ptp,acm
 on property:sys.usb.config=ptp,adb
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff18
+#ifndef VENDOR_EDIT//zhanhua.li@BasicDrv.USB,2013/09/14, Modify for customizing VID&PID
+#    write /sys/class/android_usb/android0/idProduct 200C
+#else
+    write /sys/class/android_usb/android0/idProduct 2772
+#endif
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     start adbd
@@ -169,7 +221,7 @@ on property:sys.usb.config=ptp,adb,acm
 on property:sys.usb.config=ptp,mass_storage
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff30
+    write /sys/class/android_usb/android0/idProduct 2015
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state ${sys.usb.config}
@@ -178,7 +230,7 @@ on property:sys.usb.config=ptp,mass_storage
 on property:sys.usb.config=ptp,mass_storage,adb
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff38
+    write /sys/class/android_usb/android0/idProduct 2014
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     start adbd
@@ -188,9 +240,19 @@ on property:sys.usb.config=ptp,mass_storage,adb
 on property:sys.usb.config=rndis
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff80
+#ifndef VENDOR_EDIT//Jinquan.Lin@BasicDrv.USB, 2012/05/23, Modify for customizing VID&PID
+#    write /sys/class/android_usb/android0/idProduct 2004
+#else/* VENDOR_EDIT */
+    write /sys/class/android_usb/android0/idProduct 276A
+#endif/* VENDOR_EDIT */
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
-    write /sys/class/android_usb/android0/bDeviceClass 224
+#ifndef VENDOR_EDIT//Yixue.Ge@ProDrv.USB, 2012/08/22, Modify for customizing VID&PID
+#   write /sys/class/android_usb/android0/bDeviceClass 224
+#else/* VENDOR_EDIT */
+    write /sys/class/android_usb/android0/bDeviceClass 239
+    write /sys/class/android_usb/android0/bDeviceSubClass 2
+    write /sys/class/android_usb/android0/bDeviceProtocol 1
+#endif/* VENDOR_EDIT */    
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state ${sys.usb.config}
 
@@ -208,7 +270,11 @@ on property:sys.usb.config=rndis,acm
 on property:sys.usb.config=rndis,adb
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor ${sys.usb.vid}
-    write /sys/class/android_usb/android0/idProduct ff88
+#ifndef VENDOR_EDIT//zhanhua.li@BasicDrv.USB,2013/09/14, Modify for customizing VID&PID
+ #   write /sys/class/android_usb/android0/idProduct 2005
+#else/* VENDOR_EDIT */
+    write /sys/class/android_usb/android0/idProduct 2766
+#endif/* VENDOR_EDIT */
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     start adbd

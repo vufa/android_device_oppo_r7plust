@@ -27,7 +27,10 @@ on init
     mkdir /storage/sdcard1 0700 root root
 
     export EXTERNAL_STORAGE /storage/emulated/legacy
-
+#ifdef VENDOR_EDIT
+#huifangfang@Swdp.Android.Boot&Charge, 2015/06/17, modify for export sdcard access
+	export SECONDARY_STORAGE /storage/sdcard1
+#endif /*VENDOR_EDIT*/
     export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
     export EMULATED_STORAGE_TARGET /storage/emulated
 
