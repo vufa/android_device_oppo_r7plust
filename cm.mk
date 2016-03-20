@@ -5,7 +5,7 @@ PRODUCT_RELEASE_NAME := r7plusm
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
 # Inherit device configuration
-$(call inherit-product, device/oppo/r7plusm/device_r7plusm.mk)
+$(call inherit-product, device/oppo/r7plusm/full_r7plusm.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := r7plusm
