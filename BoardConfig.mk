@@ -18,7 +18,7 @@ LOCAL_PATH := device/oppo/r7plusm
 -include vendor/oppo/r7plusm/BoardConfigVendor.mk
 
 # Device specific headers
-TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
+TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/fingerprint
 
 USE_CAMERA_STUB := true
 TARGET_PROVIDES_INIT_RC := true
@@ -63,14 +63,13 @@ COMMON_GLOBAL_CPPFLAGS += -DMTK_HARDWARE
 BOARD_CONNECTIVITY_VENDOR := MediaTek
 BOARD_USES_MTK_AUDIO := true
 
+# Assert
+TARGET_OTA_ASSERT_DEVICE := r7plusm,R7plusm
+
 #Use dlmalloc instead of jemalloc for mallocs
 #MALLOC_IMPL := dlmalloc
 
 # kernel
-#TARGET_KERNEL_ARCH := arm64
-#TARGET_KERNEL_HEADER_ARCH := arm64
-#TARGET_KERNEL_SOURCE := kernel/oppo/r7plusm
-#TARGET_KERNEL_CONFIG := r7plusm_defconfig
 TARGET_USES_64_BIT_BINDER := true
 TARGET_IS_64_BIT := true
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive
@@ -162,8 +161,34 @@ BOARD_RECOVERY_SWIPE := true
 BOARD_SUPPRESS_EMMC_WIPE := true
 BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_15x24.h\"
 TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/ramdisk/recovery.fstab
-TARGET_RECOVERY_PIXEL_FORMAT := "RGB_565"
+#TARGET_RECOVERY_PIXEL_FORMAT := "RGBA_8888"
 TARGET_USERIMAGES_USE_EXT4 := true
+
+#TWRP
+
+DEVICE_RESOLUTION := 1080x1920
+
+TW_EXTRA_LANGUAGES := true
+
+TW_BUILD_ZH_CN_SUPPORT := true
+
+TW_DEFAULT_LANGUAGE := zh_CN
+
+BOARD_HAS_NO_REAL_SDCARD := true
+
+RECOVERY_SDCARD_ON_DATA := true
+
+TW_NO_USB_STORAGE := false
+
+RECOVERY_GRAPHICS_USE_LINELENGTH := true
+
+TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
+
+TW_BRIGHTNESS_PATH := "/sys/devices/mtk-msdc.0/subsystem/drivers/leds-mt67xx/leds/lcd-backlight/brightness"
+
+TW_MAX_BRIGHTNESS := 255
+
+TW_NO_SCREEN_TIMEOUT := true
 
 # SELinux
 BOARD_SEPOLICY_DIRS := \
@@ -304,7 +329,6 @@ BOARD_SEPOLICY_UNION += \
 	logd.te \
 	mediaserver.te \
 	mtp.te \
-	nfc.te \
 	racoon.te \
 	radio.te \
 	rild.te \
