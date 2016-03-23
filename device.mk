@@ -72,6 +72,12 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml \
     $(LOCAL_PATH)/configs/audio_device.xml:system/etc/audio_device.xml \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf
+
+# Fingerprint sensor
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.fingerprint.xml:system/etc/permissions/android.hardware.fingerprint.xml
+PRODUCT_PACKAGES += \
+    fingerprint.mt6795
     
 # Bluetooth                            
 PRODUCT_PACKAGES += \
@@ -187,6 +193,10 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 # Charger
 PRODUCT_PACKAGES += \
       charger_res_images
+
+# Input configuration
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/keylayout/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl
 
 # Wifi
  PRODUCT_PACKAGES += \
