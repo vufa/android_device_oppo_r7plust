@@ -141,7 +141,6 @@ PRODUCT_COPY_FILES += \
     
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/android.hardware.consumerir.xml:system/etc/permissions/android.hardware.consumerir.xml \
     $(LOCAL_PATH)/configs/android.hardware.microphone.xml:system/etc/permissions/android.hardware.microphone.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.camera.autofocus.xml:system/etc/permissions/android.hardware.camera.autofocus.xml \
