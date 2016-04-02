@@ -100,9 +100,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
      lights.mt6795
 
-# Ramdisk
+# Ramdisk $(LOCAL_PATH)/ramdisk/healthd:sbin/healthd \
+app_packages += \
+    healthd
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/ramdisk/healthd:sbin/healthd \
     $(LOCAL_PATH)/ramdisk/enableswap.sh:root/enableswap.sh \
     $(LOCAL_PATH)/ramdisk/fstab.charger:root/fstab.charger\
     $(LOCAL_PATH)/ramdisk/fstab.mt6795:root/fstab.mt6795 \

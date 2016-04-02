@@ -13,9 +13,16 @@
 # limitations under the License.
 
 # Key layout used for Bluetooth AVRCP support.
-
-key 200   MEDIA_PLAY
-key 201   MEDIA_PAUSE
+#ifdef VENDOR_EDIT
+#ShangXiu.Gao@Connectivity.BT, 2014/09/18, sync it with MSM8974
+#Modify for when we start music from bluetooth earphone
+#and then stop it from phone, and then press bluetooth earphone play button, the music didnot start.
+key 200   MEDIA_PLAY_PAUSE    
+key 201   MEDIA_PLAY_PAUSE    
+#else /*VENDOR_EDIT*/
+#key 200   MEDIA_PLAY          
+#key 201   MEDIA_PAUSE         
+#endif
 key 166   MEDIA_STOP
 key 163   MEDIA_NEXT
 key 165   MEDIA_PREVIOUS
