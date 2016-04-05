@@ -21,7 +21,7 @@ LOCAL_PATH := device/oppo/r7plusm
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/fingerprint
 
 USE_CAMERA_STUB := true
-TARGET_PROVIDES_INIT_RC := true
+#TARGET_PROVIDES_INIT_RC := true
 # inherit from the proprietary version
 
 # Platform
@@ -72,7 +72,6 @@ TARGET_OTA_ASSERT_DEVICE := r7plusm,R7plusm
 # kernel
 TARGET_USES_64_BIT_BINDER := true
 TARGET_IS_64_BIT := true
-CONFIG_MTK_AAL_SUPPORT := true
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 2048

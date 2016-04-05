@@ -52,12 +52,12 @@ on post-fs-data
     chmod 0660 /proc/smb/ScreenComm
     
 # Create char device file for WMT, GPS, BT, FM, WIFI
-#    mknod /dev/stpwmt c 190 0;
+    mknod /dev/stpwmt c 190 0;
 #    mknod /dev/stpgps c 191 0;
 #    mknod /dev/stpbt  c 192 0;
 
-#    chmod 0660 /dev/stpwmt
-#    chown system system /dev/stpwmt
+    chmod 0660 /dev/stpwmt
+    chown system system /dev/stpwmt
     
 #    chmod 0660 /dev/wmtdetect
 #    chown system system /dev/wmtdetect

@@ -100,9 +100,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
      lights.mt6795
 
-# Ramdisk $(LOCAL_PATH)/ramdisk/healthd:sbin/healthd \
-app_packages += \
-    healthd
+# Ramdisk $(LOCAL_PATH)/ramdisk/healthd:sbin/healthd \ 
+PRODUCT_PACKAGES += \
+     healthd
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ramdisk/enableswap.sh:root/enableswap.sh \
     $(LOCAL_PATH)/ramdisk/fstab.charger:root/fstab.charger\
@@ -221,6 +221,10 @@ PRODUCT_PACKAGES += \
 # GPS
 PRODUCT_PACKAGES += \
     YGPS
+
+#libcutils
+PRODUCT_PACKAGES += \
+     libcutils
 
 # APK
 PRODUCT_PACKAGES += \
