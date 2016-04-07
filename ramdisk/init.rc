@@ -9,6 +9,9 @@ import /init.usb.rc
 import /init.${ro.hardware}.rc
 import /init.${ro.zygote}.rc
 import /init.trace.rc
+# Include CM's extra init file
+import /init.cm.rc
+
 
 on early-init
     # Set init and its forked children's oom_adj.
@@ -29,11 +32,12 @@ on early-init
     # create mountpoints
     mkdir /mnt 0775 root system
 
+    mount debugfs debugfs /sys/kernel/debug
+
 on init
     sysclktz 0
 
-loglevel 6 ####
-    write /proc/bootprof "INIT: on init start" ####
+    loglevel 3
 
     # Backward compatibility
     symlink /system/etc /etc
@@ -60,6 +64,7 @@ loglevel 6 ####
     write /sys/fs/cgroup/memory/sw/memory.move_charge_at_immigrate 1
     chown root system /sys/fs/cgroup/memory/sw/tasks
     chmod 0660 /sys/fs/cgroup/memory/sw/tasks
+    chmod 0220 /sys/fs/cgroup/memory/cgroup.event_control
 
     mkdir /system
     mkdir /data 0771 system system
@@ -120,25 +125,18 @@ loglevel 6 ####
     mount cgroup none /dev/cpuctl cpu
     chown system system /dev/cpuctl
     chown system system /dev/cpuctl/tasks
-    chmod 0660 /dev/cpuctl/tasks
+    chmod 0666 /dev/cpuctl/tasks
     write /dev/cpuctl/cpu.shares 1024
-    write /dev/cpuctl/cpu.rt_runtime_us 950000
+    write /dev/cpuctl/cpu.rt_runtime_us 800000
     write /dev/cpuctl/cpu.rt_period_us 1000000
 
-    mkdir /dev/cpuctl/apps
-    chown system system /dev/cpuctl/apps/tasks
-    chmod 0666 /dev/cpuctl/apps/tasks
-    write /dev/cpuctl/apps/cpu.shares 1024
-    write /dev/cpuctl/apps/cpu.rt_runtime_us 800000
-    write /dev/cpuctl/apps/cpu.rt_period_us 1000000
-
-    mkdir /dev/cpuctl/apps/bg_non_interactive
-    chown system system /dev/cpuctl/apps/bg_non_interactive/tasks
-    chmod 0666 /dev/cpuctl/apps/bg_non_interactive/tasks
+    mkdir /dev/cpuctl/bg_non_interactive
+    chown system system /dev/cpuctl/bg_non_interactive/tasks
+    chmod 0666 /dev/cpuctl/bg_non_interactive/tasks
     # 5.0 %
-    write /dev/cpuctl/apps/bg_non_interactive/cpu.shares 52
-    write /dev/cpuctl/apps/bg_non_interactive/cpu.rt_runtime_us 700000
-    write /dev/cpuctl/apps/bg_non_interactive/cpu.rt_period_us 1000000
+    write /dev/cpuctl/bg_non_interactive/cpu.shares 52
+    write /dev/cpuctl/bg_non_interactive/cpu.rt_runtime_us 700000
+    write /dev/cpuctl/bg_non_interactive/cpu.rt_period_us 1000000
 
     # qtaguid will limit access to specific data based on group memberships.
     #   net_bw_acct grants impersonation of socket owners.
@@ -158,21 +156,6 @@ loglevel 6 ####
     mount pstore pstore /sys/fs/pstore
     chown system log /sys/fs/pstore/console-ramoops
     chmod 0440 /sys/fs/pstore/console-ramoops
-
-	# ion device
-	chmod 0666 /dev/ion
-	
-#ifdef VENDOR_EDIT
-#Peirs@Swdp.Android.FrameworkUi, 2014/07/30, add provide a function to indentify the usage of the phone.
-#recommend set in the stage of "on post-fs"
-    chmod 0660 /dev/block/platform/mtk-msdc.0/by-name/reserve4
-    chown root system /dev/block/platform/mtk-msdc.0/by-name/reserve4
-    chmod 0660 /dev/block/mmcblk0p15
-    chown root system /dev/block/mmcblk0p15
-#wangjw add for critical log	
-	chmod 0660 /dev/block/mmcblk0p13
-    chown root system /dev/block/mmcblk0p13
-#endif
 
 # Healthd can trigger a full boot from charger mode by signaling this
 # property when the power button is held.
@@ -273,6 +256,7 @@ on post-fs-data
     # create basic filesystem structure
     mkdir /data/misc 01771 system misc
     mkdir /data/misc/adb 02750 system shell
+    mkdir /data/misc/audit 02750 audit system
     mkdir /data/misc/bluedroid 0770 bluetooth net_bt_stack
     mkdir /data/misc/bluetooth 0770 system system
     mkdir /data/misc/keystore 0700 keystore keystore
@@ -292,10 +276,6 @@ on post-fs-data
     mkdir /data/misc/user 0771 root root
     # give system access to wpa_supplicant.conf for backup and restore
     chmod 0660 /data/misc/wifi/wpa_supplicant.conf
-	#ifdef VENDOR_EDIT
-	#Yadong.Hu@Prd.Svc.Wifi, 2014/11/26, Add for chown wifi in the time of init
-	chown system wifi /data/misc/wifi/wpa_supplicant.conf
-	#endif
     mkdir /data/local 0751 root root
     mkdir /data/misc/media 0700 media media
 
@@ -308,6 +288,7 @@ on post-fs-data
     mkdir /data/app-lib 0771 system system
     mkdir /data/app 0771 system system
     mkdir /data/property 0700 root root
+    mkdir /data/tombstones 0771 system system
 
     # create dalvik-cache, so as to enforce our permissions
     mkdir /data/dalvik-cache 0771 root root
@@ -323,12 +304,13 @@ on post-fs-data
 
     # create directory for DRM plug-ins - give drm the read/write access to
     # the following directory.
-    mkdir /data/drm 0770 drm drm ####
-    # mkdir /data/drm 0774 drm system ####
+    mkdir /data/drm 0770 drm drm
 
     # create directory for MediaDrm plug-ins - give drm the read/write access to
     # the following directory.
     mkdir /data/mediadrm 0770 mediadrm mediadrm
+
+    mkdir /data/adb 0700 root root
 
     # symlink to bugreport storage location
     symlink /data/data/com.android.shell/files/bugreports /data/bugreports
@@ -341,6 +323,9 @@ on post-fs-data
 
     # Set SELinux security contexts on upgrade or policy update.
     restorecon_recursive /data
+    restorecon /data/data
+    restorecon /data/user
+    restorecon /data/user/0
 
     # If there is no fs-post-data action in the init.<device>.rc file, you
     # must uncomment this line, otherwise encrypted filesystems
@@ -357,12 +342,6 @@ on boot
     # set RLIMIT_NICE to allow priorities from 19 to -20
     setrlimit 13 40 40
 
-# ifdef VENDOR_EDIT //mingqiang.guo@phone.bsp 2015-04-01 add for tp firmware update 
-# update touchpanel firmware
-	write /sys/bus/i2c/devices/3-0020/oppo_tp_fw_update 0
-	chown system system /sys/bus/i2c/devices/3-0020/oppo_tp_fw_update
-# endif //VENDOR_EDIT       
-
     # Memory management.  Basic kernel parameters, and allow the high
     # level system server to be able to adjust the kernel OOM driver
     # parameters to match how it is managing things.
@@ -374,18 +353,8 @@ on boot
     chmod 0220 /sys/module/lowmemorykiller/parameters/minfree
 
     # Tweak background writeout
-    #write /proc/sys/vm/dirty_expire_centisecs 200
-    #write /proc/sys/vm/dirty_background_ratio  5
-    # ifdef VENDOR_EDIT	//jingchun.wang@phone.bsp 2015-07-08 modify for improve mtp performance
-    write /proc/sys/vm/dirty_expire_centisecs 550
-	write /proc/sys/vm/dirty_background_ratio 10
-	write /proc/sys/vm/dirty_writeback_centisecs 500
-	#endif //VENDOR_EDIT
-
-	# ifdef VENDOR_EDIT	//jingchun.wang@phone.bsp 2015-07-21 modify for improve read performance
-	write /sys/block/mmcblk0/queue/read_ahead_kb 512
-	# endif
-
+    write /proc/sys/vm/dirty_expire_centisecs 200
+    write /proc/sys/vm/dirty_background_ratio  5
 
     # Permissions for System Server and daemons.
     chown radio system /sys/android_power/state
@@ -433,16 +402,12 @@ on boot
     chown system system /sys/class/timed_output/vibrator/enable
     chown system system /sys/class/leds/keyboard-backlight/brightness
     chown system system /sys/class/leds/lcd-backlight/brightness
-#ifdef VENDOR_EDIT
-# Xinqin.Yang@PhoneSW.Multimedia, 2015/06/05  Add for silence mode
-    chown system system /sys/devices/virtual/mtk_disp_mgr/mtk_disp_mgr/silence
-#endif /*VENDOR_EDIT*/
+    chown system system /sys/class/leds/torch-light/brightness
     chown system system /sys/class/leds/button-backlight/brightness
     chown system system /sys/class/leds/jogball-backlight/brightness
     chown system system /sys/class/leds/red/brightness
     chown system system /sys/class/leds/green/brightness
     chown system system /sys/class/leds/blue/brightness
-	chown system system /sys/class/leds/white/brightness
     chown system system /sys/class/leds/red/device/grpfreq
     chown system system /sys/class/leds/red/device/grppwm
     chown system system /sys/class/leds/red/device/blink
@@ -535,13 +500,13 @@ service console /system/bin/sh
     class core
     console
     disabled
-#ifndef VENDOR_EDIT
-#rendong.shi@BSP.Android.USB, 2015-05-20, add for uart console
-#	user shell
-#else
-    user root
-#endif
+    user shell
+    group shell log
     seclabel u:r:shell:s0
+
+service auditd /system/bin/auditd -k
+    seclabel u:r:logd:s0
+    class main
 
 on property:ro.debuggable=1
     start console
@@ -552,14 +517,6 @@ service adbd /sbin/adbd --root_seclabel=u:r:su:s0
     socket adbd stream 660 system system
     disabled
     seclabel u:r:adbd:s0
-
-
-#ifdef VENDOR_EDIT // tanggeliang@Swdp.Android.FrameworkUi, 2014/08/18, add provide a function to indentify the usage of the phone.
-service block-mode /system/bin/sh /init.oppo.block.sh
-    class core
-    user root
-    oneshot
-#endif /* VENDOR_EDIT */
 
 # adbd on at boot in emulator
 on property:ro.kernel.qemu=1
@@ -580,10 +537,6 @@ service servicemanager /system/bin/servicemanager
     onrestart restart media
     onrestart restart surfaceflinger
     onrestart restart drm
-#ifdef VENDOR_EDIT
-#Peirs@Swdp.Android.FrameworkUi, 2014/06/30, AssertTip, add oppoasserttip for debug tolls.
-    onrestart restart oppoasserttip
-#endif
 
 service vold /system/bin/vold
     class core
@@ -603,13 +556,12 @@ service debuggerd /system/bin/debuggerd
 service debuggerd64 /system/bin/debuggerd64
     class main
 
-# for using TK init.modem.rc rild-daemon setting
 #service ril-daemon /system/bin/rild
 #    class main
 #    socket rild stream 660 root radio
 #    socket rild-debug stream 660 radio system
 #    user root
-#    group radio cache inet misc audio log
+#    group radio cache inet misc audio sdcard_rw qcom_diag log
 
 service surfaceflinger /system/bin/surfaceflinger
     class core
@@ -617,22 +569,17 @@ service surfaceflinger /system/bin/surfaceflinger
     group graphics drmrpc
     onrestart restart zygote
 
-#make sure drm server has rights to read and write sdcard ####
 service drm /system/bin/drmserver
     class main
     user drm
-    # group drm system inet drmrpc ####
-    group drm system inet drmrpc sdcard_r ####
+	# MTK
+    group drm system inet drmrpc sdcard_r
 
 service media /system/bin/mediaserver
     class main
-    user root ####
-#   google default ####
-#   user media    ####
-    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm media sdcard_r system net_bt_stack ####
-#   google default ####
-#   group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm ####
-
+	# MTK
+    user root
+    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm media sdcard_r system net_bt_stack qcom_diag
     ioprio rt 4
 
 # One shot invocation to deal with encrypted volume.
@@ -652,16 +599,10 @@ service encrypt /system/bin/vdc --wait cryptfs enablecrypto inplace default
 service bootanim /system/bin/bootanimation
     class core
     user graphics
-#    group graphics audio ####
-    group graphics media audio ####
+	# MTK
+    group graphics media audio
     disabled
     oneshot
-#ifdef VENDOR_EDIT
-#Peirs@Swdp.Android.FrameworkUi, 2014/06/30, AssertTip, add oppoasserttip for debug tolls.
-service oppoasserttip /system/bin/asserttip
-   class main
-   user system    
-#endif
 
 service installd /system/bin/installd
     class main
@@ -671,6 +612,11 @@ service flash_recovery /system/bin/install-recovery.sh
     class main
     seclabel u:r:install_recovery:s0
     oneshot
+    disabled
+
+# update recovery if enabled
+on property:persist.sys.recovery_update=true
+    start flash_recovery
 
 service racoon /system/bin/racoon
     class main
@@ -711,76 +657,3 @@ service pre-recovery /system/bin/uncrypt
     class main
     disabled
     oneshot
-
-#ifdef COLOROS_EDIT
-#ZhiYong.Lin@Plf.Framework : Add for RUtils
-service rutilsdaemon /system/bin/rutilsdaemon
-    class main
-    user root
-    disabled
-
-on property:oppo.service.rutils.enable=1
-    start rutilsdaemon
-
-on property:oppo.service.rutils.enable=0
-    stop rutilsdaemon
-
-#ZhiYong.Lin@Plf.Framework : Add for backuprestore
-service backuprestore /system/bin/br_app_data_service
-    class main
-    socket backuprestore stream 0660 root sdcard_rw
-    user root
-    disabled
-
-on property:oppo.service.br.enable=1
-    start backuprestore
-
-on property:oppo.service.br.enable=0
-    stop backuprestore
-#endif /* COLOROS_EDIT */
-
-#ifdef COLOROS_EDIT
-#ZhiYong.Lin@Plf.Framework : add for sync the app's data by internet's lisenlin
-service datasync /system/bin/datasync
-        class main
-        socket datasync stream 0660 root sdcard_rw
-        user root
-        disabled
-
-on property:oppo.service.datasync.enable=1
-    start datasync
-
-on property:oppo.service.datasync.enable=0
-    stop datasync
-#endif /* COLOROS_EDIT */
-
-
-#ifdef VENDOR_EDIT
-#JianRong.Zheng@Swdp.Android.Power, 2015/01/26, Add for 
-on property:debug.MB.running=1
-    setprop persist.sys.assert.panic true
-
-on property:debug.MB.running=0
-    setprop persist.sys.assert.panic false   
-#endif /* VENDOR_EDIT */
-#ifdef VENDOR_EDIT
-#moqp@Plf.framework., add begin for trafficmonitor
-    service tunman /system/bin/tunman
-    class main
-    socket tunman stream 0666 system system
-    disabled
-
-on property:oppo.service.tunman.enable=1
-    start tunman
-
-on property:oppo.service.tunman.enable=0
-    stop tunman
-#endif /* VENDOR_EDIT */
-
-#ifdef COLOROS_EDIT
-#chaochun.shuai@Plf.Framework : add for protect data 2015/07/02
-service datafree /system/bin/datafree
-    class main
-    oneshot
-
-#endif /* VENDOR_EDIT */

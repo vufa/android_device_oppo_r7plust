@@ -120,13 +120,19 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ramdisk/init.aee.rc:root/init.aee.rc \
     $(LOCAL_PATH)/ramdisk/init.mt6595.rc:root/init.mt6595.rc \
     $(LOCAL_PATH)/ramdisk/init.storage.rc:root/init.storage.rc \
-    $(LOCAL_PATH)/ramdisk/init.trace.rc:root/init.trace.rc \
     $(LOCAL_PATH)/ramdisk/meta_init.modem.rc:root/meta_init.modem.rc \
     $(LOCAL_PATH)/ramdisk/meta_init.project.rc:root/meta_init.project.rc \
-    $(LOCAL_PATH)/ramdisk/meta_init.rc:root/meta_init.rc
+    $(LOCAL_PATH)/ramdisk/meta_init.rc:root/meta_init.rc \
+    $(LOCAL_PATH)/ramdisk/init.trace.rc:root/init.trace.rc \
+    $(LOCAL_PATH)/ramdisk/init.zygote32_64.rc:root/init.zygote32_64.rc \
+    $(LOCAL_PATH)/ramdisk/init.rc:root/init.rc \
+    $(LOCAL_PATH)/ramdisk/init.zygote32.rc:root/init.zygote32.rc \
+    $(LOCAL_PATH)/ramdisk/init.zygote64_32.rc:root/init.zygote64_32.rc \
+    $(LOCAL_PATH)/ramdisk/init.zygote64.rc:root/init.zygote64.rc \
+    $(LOCAL_PATH)/ramdisk/ueventd.rc:root/ueventd.rc \
+    $(LOCAL_PATH)/ramdisk/init.environ.rc.in:root/init.environ.rc.in \
 #    $(LOCAL_PATH)/ramdisk/healthd:sbin/healthd \
 #    $(LOCAL_PATH)/ramdisk/init:root/init \
-#    $(LOCAL_PATH)/ramdisk/init.rc:root/init.rc \
 
 # Telecom
 PRODUCT_COPY_FILES += \
