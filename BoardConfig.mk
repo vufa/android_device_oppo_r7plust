@@ -14,8 +14,8 @@
 # limitations under the License.
 
 # mt6795 platform boardconfig
-LOCAL_PATH := device/oppo/r7plusm
--include vendor/oppo/r7plusm/BoardConfigVendor.mk
+LOCAL_PATH := device/oppo/r7plust
+-include vendor/oppo/r7plust/BoardConfigVendor.mk
 
 # Device specific headers
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/fingerprint
@@ -64,7 +64,7 @@ BOARD_CONNECTIVITY_VENDOR := MediaTek
 BOARD_USES_MTK_AUDIO := true
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := r7plusm,R7plusm
+TARGET_OTA_ASSERT_DEVICE := r7plust,r7plust
 
 #Use dlmalloc instead of jemalloc for mallocs
 #MALLOC_IMPL := dlmalloc
@@ -192,7 +192,7 @@ TW_NO_SCREEN_TIMEOUT := true
 
 # SELinux
 BOARD_SEPOLICY_DIRS := \
-       device/oppo/r7plusm/sepolicy
+       device/oppo/r7plust/sepolicy
 
 #SELinux: MTK added
 BOARD_SEPOLICY_UNION := \

@@ -23,18 +23,18 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 # Inherit from hardware-specific part of the product configuration
-$(call inherit-product, device/oppo/r7plusm/device.mk)
+$(call inherit-product, device/oppo/r7plust/device.mk)
 
 # Release name
-PRODUCT_RELEASE_NAME := oppo r7plusm
+PRODUCT_RELEASE_NAME := oppo r7plust
 
 EXTENDED_FONT_FOOTPRINT := true
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.timezone=Asia/Shanghai
 
-PRODUCT_DEVICE := r7plusm
-PRODUCT_NAME := full_r7plusm
+PRODUCT_DEVICE := r7plust
+PRODUCT_NAME := full_r7plust
 PRODUCT_BRAND := oppo
 PRODUCT_MODEL := OPPO R7 plusm
 PRODUCT_MANUFACTURER := oppo

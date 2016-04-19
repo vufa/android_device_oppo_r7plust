@@ -5,4 +5,4 @@ include $(CLEAR_VARS)
 ALL_PREBUILT += $(INSTALLED_KERNEL_TARGET)
 
 # include the non-open-source counterpart to this file
--include vendor/oppo/r7plusm/AndroidBoardVendor.mk
+-include vendor/oppo/r7plust/AndroidBoardVendor.mk

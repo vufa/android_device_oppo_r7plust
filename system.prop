@@ -1,5 +1,5 @@
 #
-# system.prop for R7plusm
+# system.prop for R7plust
 #
 
 rild.libpath=/system/lib/mtk-ril.so

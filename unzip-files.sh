@@ -7,7 +7,7 @@ if [ "x$UPDATE_PACKAGE" = "x" ]; then
     exit
 fi
 
-BASE=../../../vendor/oppo/r7plusm/proprietary
+BASE=../../../vendor/oppo/r7plust/proprietary
 rm -rf $BASE/*
 
 for FILE in `egrep -v '(^#|^$)' proprietary-blobs.txt`; do

@@ -17,10 +17,10 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
 # The gps config appropriate for this device
 $(call inherit-product, device/common/gps/gps_us_supl.mk)
-$(call inherit-product, device/oppo/r7plusm/vendor/copyfiles.mk)
-$(call inherit-product, vendor/oppo/r7plusm/r7plusm-vendor-blobs.mk)
+$(call inherit-product, device/oppo/r7plust/vendor/copyfiles.mk)
+$(call inherit-product, vendor/oppo/r7plust/r7plust-vendor-blobs.mk)
 
-LOCAL_PATH := device/oppo/r7plusm
+LOCAL_PATH := device/oppo/r7plust
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
@@ -29,7 +29,7 @@ PRODUCT_AAPT_CONFIG := normal xhdpi xxhdpi
 PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 
 # Recovery allowed devices
-TARGET_OTA_ASSERT_DEVICE := r7plusm
+TARGET_OTA_ASSERT_DEVICE := r7plust
 
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 	LOCAL_KERNEL := $(LOCAL_PATH)/kernel
@@ -48,7 +48,7 @@ PRODUCT_CHARACTERISTICS := nosdcard
 
 # init
 PRODUCT_PACKAGES += \
-    r7plusm
+    r7plust
 
 # gralloc
 PRODUCT_PACKAGES += \
@@ -283,7 +283,7 @@ PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
 #ifeq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)
 PRODUCT_PACKAGES += WebViewGoogle
 # The following framework overlay must be included if prebuilt WebViewGoogle.apk is used
-PRODUCT_PACKAGE_OVERLAYS += device/oppo/r7plusm/WebViewGoogle/overlay
+PRODUCT_PACKAGE_OVERLAYS += device/oppo/r7plust/WebViewGoogle/overlay
 #endif
 
 # Dalvik/HWUI
