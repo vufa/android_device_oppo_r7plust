@@ -64,7 +64,7 @@ BOARD_CONNECTIVITY_VENDOR := MediaTek
 BOARD_USES_MTK_AUDIO := true
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := r7plust,r7plust
+TARGET_OTA_ASSERT_DEVICE := R7plust,R7Plust,r7plust
 
 #Use dlmalloc instead of jemalloc for mallocs
 #MALLOC_IMPL := dlmalloc
