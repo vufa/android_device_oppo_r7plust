@@ -239,7 +239,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
      ro.adb.secure=0 \
-     ro.secure=1 \
+     ro.secure=0 \
      ro.allow.mock.location=1 \
      ro.debuggable=1 \
      ro.zygote=zygote64_32 \
