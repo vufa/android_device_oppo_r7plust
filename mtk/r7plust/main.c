@@ -205,10 +205,6 @@ int main(int argc __attribute__((unused)), char **argv __attribute__((unused)))
 	chown("/dev/ampc0", AID_BLUETOOTH, AID_BLUETOOTH);
 	chmod("/dev/ampc0", 0660);
 
-    // consumerir
-	chmod("/dev/consumerir", 0660);
-	chown("/dev/consumerir", AID_SYSTEM, AID_SYSTEM);
-
     // selinux
 	chmod("/sys/fs/selinux/policy", 0664);
 
