@@ -231,7 +231,8 @@ PRODUCT_PACKAGES += \
 
 #libcutils
 PRODUCT_PACKAGES += \
-     libcutils
+     libcutils \
+     liblog
 
 # APK
 PRODUCT_PACKAGES += \
