@@ -67,7 +67,6 @@ subsystem adf
 # FMRadio
 /dev/fm			 0660  system	   media
 
-
 # add the read write right of ttyUSB*
 /dev/bus/usb/*     	  0660   root       usb
 /dev/ttyUSB0              0660   radio      radio
@@ -87,6 +86,14 @@ subsystem adf
 
 # gpu driver for adreno200 is globally accessible
 /dev/kgsl                 0666   root       root
+
+# Begin Immersion changes
+#/dev/tspdrv               0660   system       system
+# End Immersion changes
+
+#begin fpc fingerprint
+/dev/fpc1020              0666   system     system
+#end
 
 # kms driver for drm based gpu
 /dev/dri/*                0666   root       graphics
@@ -180,7 +187,14 @@ subsystem adf
 /sys/devices/platform/leds-mt65xx/leds/red   delay_off      0664  system   system
 /sys/devices/platform/leds-mt65xx/leds/blue   delay_on      0664  system   system
 /sys/devices/platform/leds-mt65xx/leds/blue   delay_off      0664  system   system
-
+/sys/devices/platform/leds-mt65xx/leds/yellow   delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/yellow   delay_off      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/white   delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/white   delay_off      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/cyan   delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/cyan   delay_off      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/violet   delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/violet   delay_off      0664  system   system
 #NFC device
 /dev/msr3110              0666   root       root
 /dev/mt6605               0660   nfc        radio
