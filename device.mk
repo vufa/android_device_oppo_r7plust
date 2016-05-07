@@ -281,12 +281,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
 
-#ifeq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)
-PRODUCT_PACKAGES += WebViewGoogle
-# The following framework overlay must be included if prebuilt WebViewGoogle.apk is used
-PRODUCT_PACKAGE_OVERLAYS += device/oppo/r7plust/WebViewGoogle/overlay
-#endif
-
 # Dalvik/HWUI
 $(call inherit-product-if-exists, frameworks/native/build/phone-xxhdpi-2048-dalvik-heap.mk)
 $(call inherit-product-if-exists, frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk)
