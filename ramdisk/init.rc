@@ -34,6 +34,10 @@ on early-init
 
     mount debugfs debugfs /sys/kernel/debug
 
+    #start adb
+    setprop persist.sys.adb.engineermode 0
+    setprop persist.sys.usb.config mtp,mass_storage,adb	
+
 on init
     sysclktz 0
 
