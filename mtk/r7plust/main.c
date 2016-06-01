@@ -294,45 +294,6 @@ int main(int argc __attribute__((unused)), char **argv __attribute__((unused)))
 //	chown("/sys/devices/platform/msensor/driver/cpsreptz", AID_SYSTEM, AID_SYSTEM);
 //	chown("/sys/devices/platform/gsensor/driver/cpsopmode", AID_SYSTEM, AID_SYSTEM);
 //	chown("/sys/devices/platform/gsensor/driver/cpsrange", AID_SYSTEM, AID_SYSTEM);
-//E/PDR
-        chmod("/sys/class/misc/m_pdr_misc/pdractive", 0660);
-        chown("/sys/class/misc/m_pdr_misc/pdractive", AID_SYSTEM, AID_SYSTEM);
-
-//E/ACT
-        chmod("/sys/class/misc/m_act_misc/actactive", 0660);
-        chown("/sys/class/misc/m_act_misc/actactive", AID_SYSTEM, AID_SYSTEM);
-
-//E/IN_POCKET
-        chmod("/sys/class/misc/m_inpk_misc/inpkactive", 0660);
-        chown("/sys/class/misc/m_inpk_misc/inpkactive", AID_SYSTEM, AID_SYSTEM);
-
-//E/PICK_UP
-        chmod("/sys/class/misc/m_pkup_misc/pkupactive", 0660);
-        chown("/sys/class/misc/m_pkup_misc/pkupactive", AID_SYSTEM, AID_SYSTEM);
-
-//E/FACE_DOWN
-        chmod("/sys/class/misc/m_fdn_misc/fdnactive", 0660);
-        chown("/sys/class/misc/m_fdn_misc/fdnactive", AID_SYSTEM, AID_SYSTEM);
-
-//E/SHAKE
-        chmod("/sys/class/misc/m_shk_misc/shkactive", 0660);
-        chown("/sys/class/misc/m_shk_misc/shkactive", AID_SYSTEM, AID_SYSTEM);
-
-//E/TILT
-        chmod("/sys/class/misc/m_tilt_misc/tiltactive", 0660);
-        chown("/sys/class/misc/m_tilt_misc/tiltactive", AID_SYSTEM, AID_SYSTEM);
-
-//E/WAKE_GESTURE
-        chmod("/sys/class/misc/m_wag_misc/wagactive", 0660);
-        chown("/sys/class/misc/m_wag_misc/wagactive", AID_SYSTEM, AID_SYSTEM);
-
-//E/GLANCE_GESTURE
-        chmod("/sys/class/misc/m_glg_misc/glgactive", 0660);
-        chown("/sys/class/misc/m_glg_misc/glgactive", AID_SYSTEM, AID_SYSTEM);
-
-//E/SensorBase
-        chmod("/dev/m_batch_misc", 0660);
-        chown("/dev/m_batch_misc", AID_SYSTEM, AID_SYSTEM);
 
 	chmod("/sys/class/misc/m_acc_misc/accenablenodata", 0660);
 	chmod("/sys/class/misc/m_acc_misc/accactive", 0660);

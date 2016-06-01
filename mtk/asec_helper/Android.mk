@@ -6,6 +6,5 @@ LOCAL_MODULE_TAGS             := optional
 LOCAL_SRC_FILES               := asec_helper.c
 LOCAL_SHARED_LIBRARIES        := \
 	libcutils \
-	liblog \
-        libc
+	liblog
 include $(BUILD_EXECUTABLE)
