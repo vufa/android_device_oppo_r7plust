@@ -16,7 +16,6 @@
 
 #define LOG_TAG "libbt_vendor_mtk"
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <dlfcn.h>
 #include <utils/Log.h>
@@ -24,9 +23,9 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <bt_vendor_lib.h>
-#include <bt_hci_lib.h>
+/* #include <bt_hci_lib.h> */
 #include <bt_hci_bdroid.h>
-//#include <utils.h>
+/* #include <utils.h> */
 
 /**
  * TODO: check/fix this value. does this make sense for MTK? It is taken from TI
@@ -68,7 +67,7 @@ int mtk_init(const bt_vendor_callbacks_t* p_cb, unsigned char *local_bdaddr) {
   if (p_cb == NULL)
     {
       ALOGE("init failed with no user callbacks!");
-      return BT_HC_STATUS_FAIL;
+      return -1;
     }
 
   bt_vendor_cbacks = (bt_vendor_callbacks_t *) p_cb;
@@ -76,7 +75,11 @@ int mtk_init(const bt_vendor_callbacks_t* p_cb, unsigned char *local_bdaddr) {
   dlerror();
 
   mtklib_handle = dlopen("libbluetoothdrv.so", RTLD_LAZY);
- 
+  if (! mtklib_handle) {
+    ALOGE("Failed to open libbluetoothdrv library");
+    return (int)mtklib_handle;
+  }
+
   mtk_bt_enable = dlsym(mtklib_handle, "mtk_bt_enable");
   mtk_bt_disable = dlsym(mtklib_handle, "mtk_bt_disable");
 

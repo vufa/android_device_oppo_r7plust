@@ -25,7 +25,8 @@ on early-init
 
     start ueventd
 
-    mount debugfs debugfs /sys/kernel/debug
+    #start adb
+    setprop persist.sys.usb.config mtp,mass_storage,adb	
 
 on init
     sysclktz 0
@@ -695,6 +696,7 @@ service bootanim /system/bin/bootanimation
     group graphics audio
     disabled
     oneshot
+    writepid /dev/cpuset/system-background/tasks
 
 service gatekeeperd /system/bin/gatekeeperd /data/misc/gatekeeper
     class late_start
