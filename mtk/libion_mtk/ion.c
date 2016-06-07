@@ -18,6 +18,7 @@
  *  limitations under the License.
  */
 #include <cutils/log.h>
+#include <string.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>

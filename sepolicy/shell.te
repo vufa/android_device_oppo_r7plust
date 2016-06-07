@@ -1,109 +1,89 @@
-# ==============================================
-# MTK Policy Rule
-# ============
+# Domain for shell processes spawned by ADB or console service.
+type shell, domain, mlstrustedsubject;
+type shell_exec, exec_type, file_type;
 
-# Date : WK14.XX
-# Operation : Migration
-# Purpose : for exec labels defined by mtk
-allow shell mtk_6620_launcher_exec:file rx_file_perms;
-allow shell GoogleOtaBinder_exec:file rx_file_perms;
-allow shell MtkCodecService_exec:file rx_file_perms;
-allow shell aee_core_forwarder_exec:file rx_file_perms;
-allow shell akmd8963_exec:file rx_file_perms;
-allow shell akmd8975_exec:file rx_file_perms;
-allow shell ami304d_exec:file rx_file_perms;
-allow shell zygote_exec:file rx_file_perms;
-allow shell atci_service_exec:file rx_file_perms;
-allow shell atcid_exec:file rx_file_perms;
-allow shell audiocmdservice_atci_exec:file rx_file_perms;
-allow shell autokd_exec:file rx_file_perms;
-allow shell batterywarning_exec:file rx_file_perms;
-allow shell bmm050d_exec:file rx_file_perms;
-allow shell boot_logo_updater_exec:file rx_file_perms;
-allow shell bootanim_exec:file rx_file_perms;
-allow shell ccci_fsd_exec:file rx_file_perms;
-allow shell ccci_mdinit_exec:file rx_file_perms;
-allow shell clatd_exec:file rx_file_perms;
-allow shell debuggerd_exec:file rx_file_perms;
-allow shell dex2oat_exec:file rx_file_perms;
-allow shell dhcp6c_exec:file rx_file_perms;
-allow shell dhcp_exec:file rx_file_perms;
-allow shell dmlog_exec:file rx_file_perms;
-allow shell dnsmasq_exec:file rx_file_perms;
-allow shell drmserver_exec:file rx_file_perms;
-allow shell dualmdlogger_exec:file rx_file_perms;
-allow shell dumpstate_exec:file rx_file_perms;
-allow shell em_svr_exec:file rx_file_perms;
-allow shell emdlogger_exec:file rx_file_perms;
-allow shell factory_exec:file rx_file_perms;
-allow shell geomagneticd_exec:file rx_file_perms;
-allow shell gsm0710muxd_exec:file rx_file_perms;
-allow shell gsm0710muxdmd2_exec:file rx_file_perms;
-allow shell hostapd_exec:file rx_file_perms;
-allow shell installd_exec:file rx_file_perms;
-allow shell keystore_exec:file rx_file_perms;
-allow shell lmkd_exec:file rx_file_perms;
-allow shell logd_exec:file rx_file_perms;
-allow shell matv_exec:file rx_file_perms;
-allow shell mc6420d_exec:file rx_file_perms;
-allow shell mdlogger_exec:file rx_file_perms;
-allow shell mdnsd_exec:file rx_file_perms;
-allow shell mediaserver_exec:file rx_file_perms;
-allow shell memsicd_exec:file rx_file_perms;
-allow shell memsicd3416x_exec:file rx_file_perms;
-allow shell mobile_log_d_exec:file rx_file_perms;
-allow shell msensord_exec:file rx_file_perms;
-allow shell mtk_agpsd_exec:file rx_file_perms;
-allow shell mtkbt_exec:file rx_file_perms;
-allow shell mtkrild_exec:file rx_file_perms;
-allow shell mtkrildmd2_exec:file rx_file_perms;
-allow shell mtp_exec:file rx_file_perms;
-allow shell muxreport_exec:file rx_file_perms;
-allow shell netdiag_exec:file rx_file_perms;
-allow shell nvram_agent_binder_exec:file rx_file_perms;
-allow shell nvram_daemon_exec:file rx_file_perms;
-allow shell orientationd_exec:file rx_file_perms;
-allow shell dex2oat_exec:file rx_file_perms;
-allow shell ppl_agent_exec:file rx_file_perms;
-allow shell ppp_exec:file rx_file_perms;
-allow shell pq_exec:file rx_file_perms;
-allow shell racoon_exec:file rx_file_perms;
-allow shell runas_exec:file rx_file_perms;
-allow shell s62xd_exec:file rx_file_perms;
-allow shell sdcardd_exec:file rx_file_perms;
+# Create and use network sockets.
+net_domain(shell)
+
+# Run app_process.
+# XXX Transition into its own domain?
+app_domain(shell)
+
+# logcat
+read_logd(shell)
+control_logd(shell)
+# logcat -L (directly, or via dumpstate)
+allow shell pstorefs:dir search;
+allow shell pstorefs:file r_file_perms;
+# logpersistd (nee logcatd) files
+allow shell misc_logd_file:dir r_dir_perms;
+allow shell misc_logd_file:file r_file_perms;
+
+# read files in /data/anr
+allow shell anr_data_file:dir r_dir_perms;
+allow shell anr_data_file:file r_file_perms;
+
+# Access /data/local/tmp.
+allow shell shell_data_file:dir create_dir_perms;
+allow shell shell_data_file:file create_file_perms;
+allow shell shell_data_file:file rx_file_perms;
+allow shell shell_data_file:lnk_file create_file_perms;
+
+# adb bugreport
+unix_socket_connect(shell, dumpstate, dumpstate)
+
+allow shell devpts:chr_file rw_file_perms;
+allow shell tty_device:chr_file rw_file_perms;
+allow shell console_device:chr_file rw_file_perms;
+allow shell input_device:dir r_dir_perms;
+allow shell input_device:chr_file rw_file_perms;
+allow shell system_file:file x_file_perms;
 allow shell shell_exec:file rx_file_perms;
-allow shell sn_exec:file rx_file_perms;
-allow shell thermal_exec:file rx_file_perms;
-allow shell thermal_manager_exec:file rx_file_perms;
-allow shell thermald_exec:file rx_file_perms;
-allow shell tiny_mkswap_exec:file rx_file_perms;
-allow shell tiny_swapon_exec:file rx_file_perms;
-allow shell wifi2agps_exec:file rx_file_perms;
-allow shell wmt_loader_exec:file rx_file_perms;
-allow shell wpa_exec:file rx_file_perms;
-allow shell xlog_exec:file rx_file_perms;
-allow shell istd8303_exec:file rx_file_perms;
+allow shell zygote_exec:file rx_file_perms;
 
-# Date : WK14.47
-# Operation : Migration
-# Purpose : for accessing /storage/emulated/legacy
-#           It's mounted as tmpfs file.
-#           CTS: testSyncFiles_extStorageVariable & testSyncFiles_normal
-allow shell tmpfs:lnk_file read;
-allow shell tmpfs:lnk_file getattr;
-allow shell block_device:dir search;
+r_dir_file(shell, apk_data_file)
 
-# Date : WK14.47
-# Operation : Migration
-# Purpose : for debugging in user debug load.
-#           su does't exist on user load.
-allow shell su_exec:file rx_file_perms;
+# Set properties.
+set_prop(shell, shell_prop)
+set_prop(shell, ctl_dumpstate_prop)
+set_prop(shell, debug_prop)
+set_prop(shell, powerctl_prop)
 
-# Date : WK14.46
-# Operation : Migration
-# Purpose : for MTK Emulator HW GPU
-allow shell qemu_pipe_device:chr_file rw_file_perms;
+# systrace support - allow atrace to run
+# debugfs doesn't support labeling individual files, so we have
+# to grant read access to all of /sys/kernel/debug.
+# Directory read access and file write access is already granted
+# in domain.te.
+allow shell debugfs:file r_file_perms;
 
-# GAT ls /data/aee_exp/db.xxxx
-allow shell aee_exp_data_file:dir r_dir_perms;
-allow shell aee_exp_data_file:file r_file_perms;
+# allow shell to run dmesg
+allow shell kernel:system syslog_read;
+
+# allow shell access to services
+allow shell servicemanager:service_manager list;
+# don't allow shell to access GateKeeper service
+allow shell { service_manager_type -gatekeeper_service }:service_manager find;
+
+# allow shell to look through /proc/ for ps, top
+allow shell domain:dir { search open read getattr };
+allow shell domain:{ file lnk_file } { open read getattr };
+
+# allow shell to read /proc/pid/attr/current for ps -Z
+allow shell domain:process getattr;
+
+# enable shell domain to read/write files/dirs for bootchart data
+# User will creates the start and stop file via adb shell
+# and read other files created by init process under /data/bootchart
+allow shell bootchart_data_file:dir rw_dir_perms;
+allow shell bootchart_data_file:file create_file_perms;
+
+# only allow unprivileged socket ioctl commands
+allow shell self:{ rawip_socket tcp_socket udp_socket } unpriv_sock_ioctls;
+
+# Do not allow shell to hard link to any files.
+# In particular, if shell hard links to app data
+# files, installd will not be able to guarantee the deletion
+# of the linked to file. Hard links also contribute to security
+# bugs, so we want to ensure the shell user never has this
+# capability.
+neverallow shell file_type:file link;

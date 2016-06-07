@@ -39,10 +39,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     asec_helper
 
-# workaround proximity sensor sometimes losing calibration after making a call
-PRODUCT_PACKAGES += \
-    meizupshelper
-
 # Display
 PRODUCT_PACKAGES += \
     libgralloc_extra \

@@ -1,43 +1,16 @@
-# ==============================================
-# MTK Policy Rule
-# ==============================================
+# Point to Point Protocol daemon
+type ppp, domain;
+type ppp_device, dev_type;
+type ppp_exec, exec_type, file_type;
+domain_auto_trans(mtp, ppp_exec, ppp)
 
+net_domain(ppp)
 
-
-# Date : WK14.34
-# Operation : Migration
-# Purpose: for VPN 
-
-allow ppp init:unix_stream_socket connectto;
-allow ppp property_socket:sock_file write;
-
-# Date : WK14.37
-# Operation : Migration
-# Purpose: for PPPOE Test 
-
-allow ppp init_shell:fd use;
-allow ppp devpts:chr_file { read write ioctl open setattr };
-allow ppp self:capability { setuid net_raw setgid dac_override };
-allow ppp self:packet_socket { write ioctl setopt read bind create };
-allow ppp shell_exec:file { read execute open execute_no_trans };
-
-
-# Date : WK14.37
-# Operation : Migration
-# Purpose: for PPPOE Test: Property permission
-
-allow ppp pppoe_ppp0_prop:property_service set;
-allow ppp net_radio_prop:property_service set;
-allow ppp system_prop:property_service set; 
-
-
-# Date : WK14.38
-# Operation : Migration
-# Purpose: for PPPOE Test 
-
-allow ppp ppp_exec:file execute_no_trans;
-
-# Date : WK14.53
-# Operation : check in 
-# Purpose: for warning kernel API 
-allow ppp mtp:file read;
+allow ppp mtp:socket rw_socket_perms;
+allow ppp mtp:unix_dgram_socket rw_socket_perms;
+allow ppp ppp_device:chr_file rw_file_perms;
+allow ppp self:capability net_admin;
+allow ppp system_file:file rx_file_perms;
+allow ppp vpn_data_file:dir w_dir_perms;
+allow ppp vpn_data_file:file create_file_perms;
+allow ppp mtp:fd use;
