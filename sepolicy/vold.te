@@ -1,186 +1,96 @@
-# volume manager
-type vold, domain;
-type vold_exec, exec_type, file_type;
+# ==============================================
+# MTK Policy Rule
+# ==============================================
 
-init_daemon_domain(vold)
+# Date : WK14.37
+# Operation : Migration 
+# Purpose : Access 'OMADM_USB' nvram
+allow vold nvram_data_file:file { read getattr open write create setattr};
+allow vold nvram_data_file:lnk_file read;
+allow vold nvram_data_file:dir { read open write add_name create getattr setattr search};
+allow vold nvdata_file:file { read getattr open write create setattr};
+allow vold nvdata_file:dir { read ioctl open write add_name create getattr setattr search};
+allow vold nvram_device:chr_file { read write open };
+allow vold platformblk_device:blk_file { read write open };
+allow vold platformblk_device:dir search;
+allow vold proc:file write;
 
-# Switch to more restrictive domains when executing common tools
-domain_auto_trans(vold, sgdisk_exec, sgdisk);
-domain_auto_trans(vold, sdcardd_exec, sdcardd);
+# Date : WK14.37
+# Operation : Migration 
+# Purpose : re-init ExternalSD
+allow vold misc_sd_device:chr_file { read ioctl open };
 
-# For a handful of probing tools, we choose an even more restrictive
-# domain when working with untrusted block devices
-domain_trans(vold, shell_exec, blkid);
-domain_trans(vold, shell_exec, blkid_untrusted);
-domain_trans(vold, fsck_exec, fsck);
-domain_trans(vold, fsck_exec, fsck_untrusted);
 
-# Allow us to jump into execution domains of above tools
-allow vold self:process setexec;
+# Date : WK14.38
+# Operation : Migration 
+# Purpose : encrypt phone
+allow vold kernel:system module_request;
+allow vold misc_device:chr_file { write open };
+allow vold platformblk_device:blk_file { ioctl getattr };
+allow vold zram0_device:blk_file getattr;
 
-# For sgdisk launched through popen()
-allow vold shell_exec:file rx_file_perms;
+# Date : WK14.38
+# Operation : Migration 
+# Purpose : symbolic link for /data/ext_sdcard_tool
+allow vold system_data_file:lnk_file { create unlink };
 
-typeattribute vold mlstrustedsubject;
-allow vold self:process setfscreate;
-allow vold system_file:file x_file_perms;
-allow vold block_device:dir create_dir_perms;
-allow vold block_device:blk_file create_file_perms;
-auditallow vold block_device:blk_file create_file_perms;
-allow vold device:dir write;
-allow vold devpts:chr_file rw_file_perms;
-allow vold rootfs:dir mounton;
-allow vold sdcard_type:dir mounton; # TODO: deprecated in M
-allow vold sdcard_type:filesystem { mount remount unmount }; # TODO: deprecated in M
-allow vold sdcard_type:dir create_dir_perms; # TODO: deprecated in M
-allow vold sdcard_type:file create_file_perms; # TODO: deprecated in M
-ifelse(shipping_build, `true', ,
-  allow vold sdcard_posix:filesystem { relabelto relabelfrom };
-)
-allow vold labeledfs:filesystem { relabelfrom };
+# Date : WK14.40
+# Operation : Migration 
+# Purpose : multi partition
+allow vold sdcardd_exec:file { read open execute execute_no_trans };
+allow vold self:capability { sys_resource setgid setuid };
+allow vold install_data_file:file { read open };
+allow vold fuse_device:chr_file { read write open };
+allow vold system_data_file:file open;
 
-# Manage locations where storage is mounted
-allow vold { mnt_media_rw_file storage_file sdcard_type }:dir create_dir_perms;
-allow vold { mnt_media_rw_file storage_file sdcard_type }:file create_file_perms;
+# Date : WK14.40
+# Operation : Migration 
+# Purpose : ptrace process
+allow vold mediaserver:process ptrace;
 
-# Access to storage that backs emulated FUSE daemons for migration optimization
-allow vold media_rw_data_file:dir create_dir_perms;
-allow vold media_rw_data_file:file create_file_perms;
+# Date : WK14.43
+# Purpose : grant permission to /protect_f and /protect_s for the command, fstrim dotrim
+allow vold protect_f_data_file:dir { read getattr open ioctl };
+allow vold protect_s_data_file:dir { read getattr open ioctl };
+allow vold persist_data_file:dir { read getattr open ioctl };
 
-# Newly created storage dirs are always treated as mount stubs to prevent us
-# from accidentally writing when the mount point isn't present.
-type_transition vold storage_file:dir storage_stub_file;
-type_transition vold mnt_media_rw_file:dir mnt_media_rw_stub_file;
+# Date : WK14.44
+# Operation : Migration 
+allow vold proc_lk_env:file { read write open ioctl};
+allow vold media_rw_data_file:dir { read open };
 
-# Allow mounting of storage devices
-allow vold { mnt_media_rw_stub_file storage_stub_file }:dir { mounton create rmdir getattr setattr };
-allow vold sdcard_type:filesystem { mount unmount remount };
+# Date : WK14.46
+# Operation : allow sdcard create tmpfs link file
+allow vold tmpfs:lnk_file create;
 
-# Manage per-user primary symlinks
-allow vold mnt_user_file:dir create_dir_perms;
-allow vold mnt_user_file:lnk_file create_file_perms;
+# Date : WK14.46
+# Operation : copy the logs in /data(tmpfs) to real userdata partition
+allow vold logtemp_data_file:dir { read open getattr search};
+allow vold logtemp_data_file:file { read getattr open };
+allow vold logmisc_data_file:dir { read open getattr search};
+allow vold logmisc_data_file:file { read getattr open };
+allow vold mdlog_data_file:dir { read open getattr search};
+allow vold mdlog_data_file:file { read getattr open };
+allow vold aee_exp_data_file:dir { read open getattr search};
+allow vold aee_exp_data_file:file { read getattr open };
+allow vold data_tmpfs_log_file:dir { setattr getattr read create write rmdir relabelto remove_name open add_name search};
+allow vold data_tmpfs_log_file:file { write setattr getattr relabelto create unlink open };
+# mount crypto block device to /data/tmp_mnt/data_tmpfs_log and restorecon
+allow vold system_data_file:dir { relabelfrom relabelto setattr };
+allow vold system_data_file:file { relabelfrom relabelto};
 
-# Allow to create and mount expanded storage
-allow vold mnt_expand_file:dir { create_dir_perms mounton };
-allow vold apk_data_file:dir { create getattr setattr };
-allow vold shell_data_file:dir { create getattr setattr };
+# Date : WK14.49
+# Purpose : ptrace process
+allow vold platform_app:process ptrace;
+allow vold mobile_log_d:process ptrace;
 
-allow vold tmpfs:filesystem { mount unmount };
-allow vold tmpfs:dir create_dir_perms;
-allow vold tmpfs:dir mounton;
-allow vold self:capability { net_admin dac_override mknod sys_admin chown fowner fsetid };
-allow vold self:netlink_kobject_uevent_socket create_socket_perms;
-allow vold app_data_file:dir search;
-allow vold app_data_file:file rw_file_perms;
-allow vold loop_device:blk_file create_file_perms;
-allow vold vold_device:blk_file create_file_perms;
-allow vold dm_device:chr_file rw_file_perms;
-allow vold dm_device:blk_file rw_file_perms;
-# For vold Process::killProcessesWithOpenFiles function.
-allow vold domain:dir r_dir_perms;
-allow vold domain:{ file lnk_file } r_file_perms;
-allow vold domain:process { signal sigkill };
-allow vold self:capability { sys_ptrace kill };
+# Date : WK14.50
+# Purpose : read/write sys env
+allow vold misc_device:chr_file read;
 
-# XXX Label sysfs files with a specific type?
-allow vold sysfs:file rw_file_perms;
+# Date : WK15.02
+# Purpose : fsck_msdos
+allow vold platform_app:fd use;
 
-allow vold kmsg_device:chr_file rw_file_perms;
-
-# Run fsck.
-allow vold fsck_exec:file rx_file_perms;
-
-# Log fsck results
-allow vold fscklogs:dir rw_dir_perms;
-allow vold fscklogs:file create_file_perms;
-
-#
-# Rules to support encrypted fs support.
-#
-
-# Unmount and mount the fs.
-allow vold labeledfs:filesystem { mount unmount remount };
-
-# Access /efs/userdata_footer.
-# XXX Split into a separate type?
-allow vold efs_file:file rw_file_perms;
-
-# Create and mount on /data/tmp_mnt and management of expansion mounts
-allow vold system_data_file:dir { create rw_dir_perms mounton setattr rmdir };
-
-# Set scheduling policy of kernel processes
-allow vold kernel:process setsched;
-
-# Property Service
-set_prop(vold, vold_prop)
-set_prop(vold, powerctl_prop)
-set_prop(vold, ctl_fuse_prop)
-set_prop(vold, restorecon_prop)
-
-# ASEC
-allow vold asec_image_file:file create_file_perms;
-allow vold asec_image_file:dir rw_dir_perms;
-security_access_policy(vold)
-allow vold asec_apk_file:dir { create_dir_perms mounton relabelfrom relabelto };
-allow vold asec_public_file:dir { relabelto setattr };
-allow vold asec_apk_file:file { r_file_perms setattr relabelfrom relabelto };
-allow vold asec_public_file:file { relabelto setattr };
-# restorecon files in asec containers created on 4.2 or earlier.
-allow vold unlabeled:dir { r_dir_perms setattr relabelfrom };
-allow vold unlabeled:file { r_file_perms setattr relabelfrom };
-
-# Handle wake locks (used for device encryption)
-wakelock_use(vold)
-
-# talk to batteryservice
-binder_use(vold)
-binder_call(vold, healthd)
-
-# talk to keymaster
-allow vold tee_device:chr_file rw_file_perms;
-
-# Access userdata block device.
-allow vold userdata_block_device:blk_file rw_file_perms;
-auditallow vold userdata_block_device:blk_file rw_file_perms;
-
-# For UMS tuning
-allow vold proc_dirty_ratio:file rw_file_perms;
-
-# Access metadata block device used for encryption meta-data.
-allow vold metadata_block_device:blk_file rw_file_perms;
-
-# Allow vold to manipulate /data/unencrypted
-allow vold unencrypted_data_file:{ file } create_file_perms;
-allow vold unencrypted_data_file:dir create_dir_perms;
-
-# Write to /proc/sys/vm/drop_caches
-allow vold proc_drop_caches:file w_file_perms;
-
-# Give vold a place where only vold can store files; everyone else is off limits
-allow vold vold_data_file:dir create_dir_perms;
-allow vold vold_data_file:file create_file_perms;
-
-# linux keyring configuration
-allow vold init:key { write search setattr };
-allow vold vold:key { write search setattr };
-
-# vold temporarily changes its priority when running benchmarks
-allow vold self:capability sys_nice;
-
-# vold needs to chroot into app namespaces to remount when runtime permissions change
-allow vold self:capability sys_chroot;
-allow vold storage_file:dir mounton;
-
-ifelse(shipping_build, `true',
-  `neverallow { domain -vold } vold_data_file:dir ~{ open create read getattr setattr search relabelto ioctl };
-   neverallow { domain -vold } vold_data_file:notdevfile_class_set ~{ relabelto getattr };
-   neverallow { domain -vold -init } vold_data_file:dir *;
-   neverallow { domain -vold -init } vold_data_file:notdevfile_class_set *;
-   neverallow { domain -vold -init } restorecon_prop:property_service set;'
-,
-   `neverallow { domain -vold -recovery } vold_data_file:dir ~{ open create read getattr setattr search relabelto ioctl };
-    neverallow { domain -vold -recovery } vold_data_file:notdevfile_class_set ~{ relabelto getattr };
-    neverallow { domain -vold -init -recovery } vold_data_file:dir *;
-    neverallow { domain -vold -init -recovery } vold_data_file:notdevfile_class_set *;
-    neverallow { domain -vold -init -recovery } restorecon_prop:property_service set;'
-)
+#install APK move to SD
+allow vold block_device:file create;

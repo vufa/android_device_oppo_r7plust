@@ -1,89 +1,120 @@
-# network manager
-type netd, domain, mlstrustedsubject;
-type netd_exec, exec_type, file_type;
+# ==============================================
+# MTK Policy Rule
+# ==============================================
 
-init_daemon_domain(netd)
-net_domain(netd)
+type dhcp6s_exec,exec_type,file_type;
 
-allow netd self:capability { net_admin net_raw kill };
-# Note: fsetid is deliberately not included above. fsetid checks are
-# triggered by chmod on a directory or file owned by a group other
-# than one of the groups assigned to the current process to see if
-# the setgid bit should be cleared, regardless of whether the setgid
-# bit was even set.  We do not appear to truly need this capability
-# for netd to operate.
-dontaudit netd self:capability fsetid;
 
-allow netd self:netlink_kobject_uevent_socket create_socket_perms;
-allow netd self:netlink_route_socket nlmsg_write;
-allow netd self:netlink_nflog_socket create_socket_perms;
-allow netd self:netlink_socket create_socket_perms;
-allow netd shell_exec:file rx_file_perms;
-allow netd system_file:file x_file_perms;
-allow netd devpts:chr_file rw_file_perms;
+# Date : WK14.34
+# Operation : Migration
+# Purpose :  wifi  
+allow netd wmtWifi_device:chr_file { write open };
 
-# For /proc/sys/net/ipv[46]/route/flush.
-allow netd proc_net:file write;
+allow netd kernel:system module_request;
+allow netd self:capability sys_module;
+allow netd self:capability fsetid;
 
-# For /sys/modules/bcmdhd/parameters/firmware_path
-# XXX Split into its own type.
-allow netd sysfs:file write;
 
-# Set dhcp lease for PAN connection
-set_prop(netd, dhcp_prop)
-set_prop(netd, system_prop)
-auditallow netd system_prop:property_service set;
+# Date : WK14.34
+# Operation : Migration
+# Purpose :  property_service for wifi 
+allow netd mtk_wifi_prop:property_service set; 
 
-# Connect to PAN
-domain_auto_trans(netd, dhcp_exec, dhcp)
-allow netd dhcp:process signal;
 
-# Needed to update /data/misc/wifi/hostapd.conf
-# TODO: See what we can do to reduce the need for
-# these capabilities
-allow netd self:capability { dac_override chown fowner };
-allow netd wifi_data_file:file create_file_perms;
-allow netd wifi_data_file:dir create_dir_perms;
-allow netd wifi_data_file:sock_file { create setattr unlink write };
+# Date : WK14.34
+# Operation : Migration
+# Purpose :   APP 
+allow netd platform_app:fd use;
+allow netd platform_app_tmpfs:file write;
 
-# Allow netd to chmod dir /data/misc/dhcp
-allow netd dhcp_data_file:dir create_dir_perms;
 
-# Needed to update /data/misc/net/rt_tables
-allow netd net_data_file:file create_file_perms;
-allow netd net_data_file:dir rw_dir_perms;
+# Date : WK14.37
+# Operation : Migration
+# Purpose :  PPPOE Test 
+allow netd ppp:process sigkill;
 
-# Allow netd to spawn hostapd in it's own domain
-domain_auto_trans(netd, hostapd_exec, hostapd)
-allow netd hostapd:process signal;
+# Date : WK14.39
+# Operation : Migration
+# Purpose :  MDLogger USB logging
+allow netd mdlogger:fd use;
+allow netd mdlogger:tcp_socket { read write };
+allow netd mdlogger:tcp_socket { getopt setopt };
 
-# Allow netd to spawn dnsmasq in it's own domain
-domain_auto_trans(netd, dnsmasq_exec, dnsmasq)
-allow netd dnsmasq:process signal;
+# Date : WK14.41
+# Operation : Migration
+# Purpose :  network logging
+allow netd netdiag:fd use;
+allow netd netdiag:udp_socket { read write getopt setopt};
 
-# Allow netd to start clatd in its own domain
-domain_auto_trans(netd, clatd_exec, clatd)
-allow netd clatd:process signal;
 
-set_prop(netd, ctl_mdnsd_prop)
+# Date : WK14.41
+# Operation : Migration
+# Purpose :  ipv6 Tethering Test 
+#============= netd ==============
+allow netd dhcp6s_exec:file execute;
+allow netd dhcp_data_file:dir { read search write add_name remove_name };
+allow netd dhcp_data_file:file { read write create open getattr unlink};
 
-# Allow netd to operate on sockets that are passed to it.
-allow netd netdomain:{tcp_socket udp_socket rawip_socket dccp_socket tun_socket} {read write getattr setattr getopt setopt};
-allow netd netdomain:fd use;
+allow netd radvd_data_file:dir { read write search add_name remove_name};
+allow netd radvd_data_file:file { read write create open unlink};
 
-###
-### Neverallow rules
-###
-### netd should NEVER do any of this
+allow netd self:capability { setuid net_bind_service setgid };
+allow netd wide_dhcpv6_data_file:dir { read search write add_name remove_name};
+allow netd wide_dhcpv6_data_file:file { read write create open getattr unlink};
 
-# Block device access.
-neverallow netd dev_type:blk_file { read write };
+# Date : WK14.42
+# Operation : Migration 
+# Purpose : for VoLTE L early bring up and first call
+allow netd volte_stack:fd use;
+allow netd volte_stack:tcp_socket { read write setopt getopt };
+allow netd volte_stack:udp_socket { read write setopt getopt };
 
-# ptrace any other app
-neverallow netd { domain }:process ptrace;
+# Date : WK14.42
+# Operation : Migration
+# Purpose :  ALPS01774455[Need Patch] [Sanity Fail][95E2 L][WFD][EE]EE occur when connect dongle1
+allow netd device:file { open write };
 
-# Write to /system.
-neverallow netd system_file:dir_file_class_set write;
 
-# Write to files in /data/data or system files on /data
-neverallow netd { app_data_file system_data_file }:dir_file_class_set write;
+# Date : WK14.44
+# Operation : Migration
+# Purpose : ALPS01789552
+#============= netd ==============
+allow netd self:capability { setuid setgid };
+
+
+#============= netd ==============
+allow netd isolated_app_tmpfs:file write;
+
+# Date : W14.52
+# Operation : Migration
+# Purpose :  add ePDG support
+allow netd ipsec:fd use;
+allow netd ipsec:tcp_socket { read write setopt getopt };
+
+#============= netd ==============
+allow netd untrusted_app:fd use;
+allow netd untrusted_app_tmpfs:file write;
+
+#============= netd ==============
+# Date : W14.53
+# Operation : Migration
+# Purpose :  For volte_imcb ut
+allow netd volte_imcb:fd use;
+allow netd volte_imcb:tcp_socket { read write };
+allow netd volte_imcb:tcp_socket getopt;
+allow netd volte_imcb:tcp_socket setopt;
+
+
+# Date : W15.02
+# Operation :  SQC
+# Purpose :  CTS for wifi
+allow netd untrusted_app:unix_stream_socket { read write getopt setopt};
+
+allow netd isolated_app:fd use;
+
+
+#============= netd ==============
+allow netd radio_tmpfs:file write;
+
+
+

@@ -1,55 +1,76 @@
-# drmserver - DRM service
-type drmserver, domain;
-type drmserver_exec, exec_type, file_type;
+# ==============================================
+# MTK Policy Rule
+# ============
 
-init_daemon_domain(drmserver)
-typeattribute drmserver mlstrustedsubject;
+#Add by rui.hu
 
-net_domain(drmserver)
+# Date : WK14.30
+# Operation : DRM UT 
+# Purpose : To pass DRM UT
 
-# Perform Binder IPC to system server.
-binder_use(drmserver)
-binder_call(drmserver, system_server)
-binder_call(drmserver, appdomain)
-binder_service(drmserver)
+allow drmserver nvram_agent_binder:binder call;
+allow drmserver platform_app:dir search;
+allow drmserver platform_app:file { read getattr open };
+allow drmserver property_socket:sock_file write;
+allow drmserver radio_data_file:file { read getattr open };
+allow drmserver sdcard_internal:file open;
+allow drmserver tmpfs:lnk_file read;
 
-# Perform Binder IPC to mediaserver
-binder_call(drmserver, mediaserver)
+#Add by rui.hu
+# Date : WK14.36
+# Operation : DRM UT 
+# Purpose : Make drmserver and binder read /proc/pid/cmdline to get process name
+#system app to drmserver
+allow drmserver system_app:dir search;
+allow drmserver system_app:file { read open getattr };
+#Mediaserver to drmserver
+allow drmserver mediaserver:dir search;
+allow drmserver mediaserver:file { read open getattr };
 
-allow drmserver sdcard_type:dir search;
-allow drmserver drm_data_file:dir create_dir_perms;
-allow drmserver drm_data_file:file create_file_perms;
-allow drmserver tee_device:chr_file rw_file_perms;
-allow drmserver app_data_file:file { read write getattr };
-allow drmserver sdcard_type:file { read write getattr };
-r_dir_file(drmserver, efs_file)
+#Add by rui.hu
+# Date : WK14.36.5
+# Operation : DRM UT 
+# Purpose : Make widevine mediacodec mode work
+allow drmserver untrusted_app:dir search;
+allow drmserver untrusted_app:file { read open getattr };
 
-type drmserver_socket, file_type;
+#Add by rui.hu
+# Date : WK14.40.1
+# Operation : DRM SQC - play OMA DRM audio file failed
+# Purpose : Make OMA DRM audio file can be played
+allow drmserver radio_data_file:dir search;
 
-# /data/app/tlcd_sock socket file.
-# Clearly, /data/app is the most logical place to create a socket.  Not.
-allow drmserver apk_data_file:dir rw_dir_perms;
-type_transition drmserver apk_data_file:sock_file drmserver_socket;
-allow drmserver drmserver_socket:sock_file create_file_perms;
-allow drmserver tee:unix_stream_socket connectto;
-# Delete old socket file if present.
-allow drmserver apk_data_file:sock_file unlink;
+#Add by rui.hu
+# Date : WK14.44.2
+# Operation : DRM SQC - view image failed
+# Purpose : To fix ALPS01790300
+allow drmserver surfaceflinger:fd use;
 
-# After taking a video, drmserver looks at the video file.
-r_dir_file(drmserver, media_rw_data_file)
+#Add by rui.hu
+# Date : WK14.44.3
+# Operation : MTBF test fail
+# Purpose : To fix ALPS01793801
+allow drmserver mediaserver:fifo_file read;
 
-# Read resources from open apk files passed over Binder.
-allow drmserver apk_data_file:file { read getattr };
-allow drmserver asec_apk_file:file { read getattr };
+#Add by rui.hu
+# Date : WK14.46.4
+# Operation : DRM SQC - view image failed
+# Purpose : To fix ALPS01822176
+allow drmserver mediaserver:fifo_file write;
 
-# Read /data/data/com.android.providers.telephony files passed over Binder.
-allow drmserver radio_data_file:file { read getattr };
+# Date : WK14.52
+# Operation : WVL1 IT
+# Purpose : SVP module operates secmem driver and SVP module operate tee
+allow drmserver mobicore:unix_stream_socket connectto;
+allow drmserver mobicore_data_file:file { read getattr open lock};
+allow drmserver mobicore_data_file:dir search;
+allow drmserver mobicore_user_device:chr_file { read write ioctl open };
+allow drmserver persist_data_file:file { read getattr open };
+allow drmserver persist_data_file:dir search;
+allow drmserver proc_secmem:file { read write ioctl open };
 
-# /oem access
-allow drmserver oemfs:dir search;
-allow drmserver oemfs:file r_file_perms;
+# Date : WK15.07
+# Operation : DRM SQC
+# Purpose : For gmo project, low memory kill
+allow drmserver platform_app_tmpfs:file write;
 
-allow drmserver drmserver_service:service_manager { add find };
-allow drmserver permission_service:service_manager find;
-
-selinux_check_access(drmserver)

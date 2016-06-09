@@ -1,95 +1,57 @@
-# installer daemon
-type installd, domain;
-type installd_exec, exec_type, file_type;
+# ==============================================
+# MTK Policy Rule
 
-init_daemon_domain(installd)
-typeattribute installd mlstrustedsubject;
-allow installd self:capability { chown dac_override fowner fsetid setgid setuid };
+# Date : WK14.34
+# Operation : Migration
+# Purpose : 6571/6572 GMO external memory access(/dev/exm0)
+allow installd exm0_device:chr_file { read write ioctl open };
 
-# Allow labeling of files under /data/app/com.example/oat/
-allow installd dalvikcache_data_file:dir relabelto;
-allow installd dalvikcache_data_file:file { relabelto link };
+# Date : WK14.34
+# Operation : Migration
+# Purpose : Move app to phone storage
+# 1. Enter Settings->Apps
+# 2. Select Downloaded tab
+# 3. Choose the application and move to phone storage
+# 4. Check the application in Phone storage tab
+allow installd apk_tmp_file:dir getattr;
+allow installd vfat:file getattr;
 
-# Allow movement of APK files between volumes
-allow installd apk_data_file:dir { create_dir_perms relabelfrom };
-allow installd apk_data_file:file { create_file_perms relabelfrom link };
-allow installd apk_data_file:lnk_file { create read unlink };
+# Date : WK14.34
+# Operation : Migration
+# Purpose : for CIP project (access /custom partition)
+allow installd custom_file:file { getattr read open };
+allow installd custom_file:dir search;
 
-allow installd asec_apk_file:file r_file_perms;
-allow installd apk_tmp_file:file { r_file_perms unlink };
-allow installd apk_tmp_file:dir { relabelfrom create_dir_perms };
-allow installd oemfs:dir r_dir_perms;
-allow installd oemfs:file r_file_perms;
-allow installd system_file:file x_file_perms;
-allow installd cgroup:dir create_dir_perms;
-allow installd mnt_expand_file:dir { search getattr };
-# Check validity of SELinux context before use.
-selinux_check_context(installd)
-# Read /seapp_contexts and /data/security/seapp_contexts
-security_access_policy(installd)
+# Date : WK14.34
+# Operation : Development GMO Feature "Move OAT to SD Card"
+# Purpose : for GMO ROM Size Slim
+allow installd dalvikcache_data_file:lnk_file { read getattr setattr unlink create };
+allow installd fuse:dir { write read remove_name search create add_name getattr setattr };
+allow installd fuse:file { write getattr setattr read create unlink open };
 
-# Search /data/app-asec and stat files in it.
-allow installd asec_image_file:dir search;
-allow installd asec_image_file:file getattr;
+# Date : WK14.40
+# Operation : SQC1
+# Purpose : for access .android_secure
+allow installd vfat:dir search;
 
-# Create /data/user and /data/user/0 if necessary.
-# Also required to initially create /data/data subdirectories
-# and lib symlinks before the setfilecon call.  May want to
-# move symlink creation after setfilecon in installd.
-allow installd system_data_file:dir create_dir_perms;
-allow installd system_data_file:lnk_file { create setattr unlink };
+# Date : WK14.44
+# Operation : SQC1
+# Purpose : for phone encrypted
+# Disabled 20150109 for bad policy review (ALPS01902735)
+#allow installd unlabeled:fifo_file write;
+#allow installd unlabeled:sock_file write;
 
-# Upgrade /data/media for multi-user if necessary.
-allow installd media_rw_data_file:dir create_dir_perms;
-allow installd media_rw_data_file:file { getattr unlink };
-# restorecon new /data/media directory.
-allow installd system_data_file:dir relabelfrom;
-allow installd media_rw_data_file:dir relabelto;
+# Date : WK14.46
+# Operation : SQC1
+# Purpose : MOTA update KK to L, workaround for access /data/.layout_version 
+allow installd system_data_file:file open;
 
-# Upgrade /data/misc/keychain for multi-user if necessary.
-allow installd misc_user_data_file:dir create_dir_perms;
-allow installd misc_user_data_file:file create_file_perms;
-allow installd keychain_data_file:dir create_dir_perms;
-allow installd keychain_data_file:file {r_file_perms unlink};
+# Date : WK15.02
+# Operation : SQC0
+# Purpose : ALPS01889518 (MTK MTBF)
+allow installd platform_app:fd use;
 
-# Create /data/.layout_version.* file
-type_transition installd system_data_file:file install_data_file;
-allow installd install_data_file:file create_file_perms;
-
-# Create files under /data/dalvik-cache.
-allow installd dalvikcache_data_file:dir create_dir_perms;
-allow installd dalvikcache_data_file:file create_file_perms;
-
-# Create /data/dalvik-cache/profiles.
-allow installd dalvikcache_profiles_data_file:dir rw_dir_perms;
-allow installd dalvikcache_profiles_data_file:file create_file_perms;
-
-# Create files under /data/resource-cache.
-allow installd resourcecache_data_file:dir rw_dir_perms;
-allow installd resourcecache_data_file:file create_file_perms;
-
-# Run dex2oat in its own sandbox.
-domain_auto_trans(installd, dex2oat_exec, dex2oat)
-
-# Upgrade from unlabeled userdata.
-# Just need enough to remove and/or relabel it.
-allow installd unlabeled:dir { getattr search relabelfrom rw_dir_perms rmdir };
-allow installd unlabeled:notdevfile_class_set { getattr relabelfrom rename unlink setattr };
-# Read pkg.apk file for input during dexopt.
-allow installd unlabeled:file r_file_perms;
-
-# Upgrade from before system_app_data_file was used for system UID apps.
-# Just need enough to relabel it and to unlink removed package files.
-# Directory access covered by earlier rule above.
-allow installd system_data_file:notdevfile_class_set { getattr relabelfrom unlink };
-
-# Manage /data/data subdirectories, including initially labeling them
-# upon creation via setfilecon or running restorecon_recursive,
-# setting owner/mode, creating symlinks within them, and deleting them
-# upon package uninstall.
-# Types extracted from seapp_contexts type= fields.
-allow installd { system_app_data_file bluetooth_data_file nfc_data_file radio_data_file shell_data_file app_data_file }:dir { create_dir_perms relabelfrom relabelto };
-allow installd { system_app_data_file bluetooth_data_file nfc_data_file radio_data_file shell_data_file app_data_file }:notdevfile_class_set { create_file_perms relabelfrom relabelto };
-
-# Create and use pty created by android_fork_execvp().
-allow installd devpts:chr_file rw_file_perms;
+# Date : WK15.03
+# Operation : SQC1
+# Purpose : ALPS01911340 (MTK MTBF for GMO project)
+allow installd platform_app_tmpfs:file { open read write getattr };

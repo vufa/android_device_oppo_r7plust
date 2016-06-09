@@ -1,124 +1,107 @@
+# ==============================================
+# MTK Policy Rule
+# ==============================================
 # recovery console (used in recovery init.rc for /sbin/recovery)
 
-# Declare the domain unconditionally so we can always reference it
-# in neverallow rules.
-type recovery, domain;
+# special factory reset & backup/restore needs permissive mode
+# permissive recovery;
 
-# But the allow rules are only included in the recovery policy.
-# Otherwise recovery is only allowed the domain rules.
-recovery_only(`
-  allow recovery self:capability { chown dac_override fowner fsetid setfcap setuid setgid sys_admin sys_tty_config };
+# Date : WK14.38
+# Operation : Migration 
+# Purpose : for recovery operation 
+allow recovery misc_device:chr_file *;
+allow recovery platformblk_device:dir *;
+allow recovery platformblk_device:blk_file *;
+allow recovery vfat:dir *;
+allow recovery vfat:file ~{ execute entrypoint };
+allow recovery vfat:lnk_file *;
+allow recovery misc_sd_device:chr_file *;
 
-  # Set security contexts on files that are not known to the loaded policy.
-  allow recovery self:capability2 mac_admin;
+# Date : WK14.39
+# Operation : Migration 
+# Purpose : for CIP project access /custom partition 
+allow recovery custom_file:dir *;
+allow recovery custom_file:file ~{ execute entrypoint };
+allow recovery custom_file:lnk_file *;
+allow recovery rootfs:dir *;
 
-  # Run helpers from / or /system without changing domain.
-  allow recovery rootfs:file execute_no_trans;
-  allow recovery system_file:file execute_no_trans;
+# Date : WK14.41
+# Operation : Migration 
+# Purpose : Differential update
+allow recovery bootimg_device:chr_file *;
+allow recovery recovery_device:chr_file *;
+allow recovery logo_device:chr_file *;
+allow recovery preloader_device:chr_file *;
+allow recovery uboot_device:chr_file *;
+allow recovery init:dir *;
+allow recovery init:file ~{ execute entrypoint };
+allow recovery init:lnk_file *;
+allow recovery kernel:dir *;
+allow recovery kernel:file ~{ execute entrypoint };
+allow recovery kernel:lnk_file *;
 
-  # Mount filesystems.
-  allow recovery rootfs:dir mounton;
-  allow recovery fs_type:filesystem ~relabelto;
-  allow recovery unlabeled:filesystem ~relabelto;
-  allow recovery contextmount_type:filesystem relabelto;
 
-  # Create and relabel files and directories under /system.
-  allow recovery exec_type:{ file lnk_file } { create_file_perms relabelfrom relabelto };
-  allow recovery system_file:{ file lnk_file } { create_file_perms relabelfrom relabelto };
-  allow recovery system_file:dir { create_dir_perms relabelfrom relabelto };
+# Date : WK14.41
+# Operation : Migration 
+# Purpose : Block full update
+allow recovery healthd:dir *;
+allow recovery healthd:file ~{ execute entrypoint };
+allow recovery healthd:lnk_file *;
+dontaudit recovery self:capability sys_ptrace;
+allow recovery ueventd:dir *;
+allow recovery ueventd:file ~{ execute entrypoint };
+allow recovery ueventd:lnk_file *;
 
-  # We may be asked to set an SELinux label for a type not known to the
-  # currently loaded policy. Allow it.
-  allow recovery unlabeled:{ file lnk_file } { create_file_perms relabelfrom relabelto };
-  allow recovery unlabeled:dir { create_dir_perms relabelfrom relabelto };
+# Date : WK14.42
+# Operation : Migration 
+# Purpose : for sepcial factory reset
+allow recovery system_data_file:dir *;
+allow recovery system_data_file:fifo_file *;
+allow recovery system_data_file:file ~{ execute entrypoint };
+allow recovery system_data_file:lnk_file *;
+allow recovery system_data_file:sock_file *;
+allow recovery apk_data_file:dir *;
+allow recovery apk_data_file:file ~{ execute entrypoint };
+allow recovery apk_data_file:lnk_file *;
 
-  # 0eb17d944704b3eb140bb9dded299d3be3aed77e in build/ added SELinux
-  # support to OTAs. However, that code has a bug. When an update occurs,
-  # some directories are inappropriately labeled as exec_type. This is
-  # only transient, and subsequent steps in the OTA script correct this
-  # mistake. New devices are moving to block based OTAs, so this is not
-  # worth fixing. b/15575013
-  allow recovery exec_type:dir { create_dir_perms relabelfrom relabelto };
-
-  # Write to /proc/sys/vm/drop_caches
-  allow recovery proc_drop_caches:file w_file_perms;
-
-  # Write to /sys/class/android_usb/android0/enable.
-  # TODO: create more specific label?
-  allow recovery sysfs:file w_file_perms;
-
-  access_kmsg(recovery)
-
-  # Access /dev/android_adb or /dev/usb-ffs/adb/ep0
-  allow recovery adb_device:chr_file rw_file_perms;
-  allow recovery functionfs:dir search;
-  allow recovery functionfs:file rw_file_perms;
-
-  # Required to e.g. wipe userdata/cache.
-  allow recovery device:dir r_dir_perms;
-  allow recovery block_device:dir r_dir_perms;
-  allow recovery dev_type:blk_file rw_file_perms;
-
-  # GUI
-  allow recovery self:process execmem;
-  allow recovery ashmem_device:chr_file execute;
-  allow recovery graphics_device:chr_file rw_file_perms;
-  allow recovery graphics_device:dir r_dir_perms;
-  allow recovery input_device:dir r_dir_perms;
-  allow recovery input_device:chr_file r_file_perms;
-  allow recovery tty_device:chr_file rw_file_perms;
-
-  # Create /tmp/recovery.log and execute /tmp/update_binary.
-  allow recovery tmpfs:file { create_file_perms x_file_perms };
-  allow recovery tmpfs:dir create_dir_perms;
-
-  # Manage files on /cache
-  allow recovery cache_file:dir create_dir_perms;
-  allow recovery cache_file:file create_file_perms;
-
-  # Read files on /oem.
-  r_dir_file(recovery, oemfs);
-
-  # Reboot the device
-  set_prop(recovery, powerctl_prop)
-
-  # Start/stop adbd via ctl.start adbd
-  set_prop(recovery, ctl_default_prop)
-
-  # Use setfscreatecon() to label files for OTA updates.
-  allow recovery self:process setfscreate;
-
-  # Allow recovery to create a fuse filesystem, and read files from it.
-  allow recovery fuse_device:chr_file rw_file_perms;
-  allow recovery fuse:dir r_dir_perms;
-  allow recovery fuse:file r_file_perms;
-
-  wakelock_use(recovery)
-
-  # This line seems suspect, as it should not really need to
-  # set scheduling parameters for a kernel domain task.
-  allow recovery kernel:process setsched;
+userdebug_or_eng(`
+  allow recovery su:dir *;
+  allow recovery su:file *;
+  allow recovery su:lnk_file *;
 ')
 
-###
-### neverallow rules
-###
+# Date : WK14.43
+# Operation : Migration 
+# Purpose : JB to L differential OTA
+#allow recovery unlabeled:lnk_file *;
 
-# Recovery should never touch /data.
-#
-# In particular, if /data is encrypted, it is not accessible
-# to recovery anyway.
-#
-# For now, we only enforce write/execute restrictions, as domain.te
-# contains a number of read-only rules that apply to all
-# domains, including recovery.
-#
-# TODO: tighten this up further.
-ifelse(shipping_build, `true',
-  `neverallow recovery data_file_type:file { no_w_file_perms no_x_file_perms };'
-,
-)
-ifelse(shipping_build, `true',
-  `neverallow recovery data_file_type:dir no_w_dir_perms;'
-,
-)
+# Date : WK14.45
+# Operation : SQC
+# Purpose : partition size changed
+allow recovery pmt_device:chr_file *;
+allow recovery tee_part_device:chr_file *;
+
+# Date : WK14.45
+# Operation : Migration 
+# Purpose : KK->L->L legacy secure OTA
+allow recovery proc_sysrq:file { write open };
+allow recovery sec_device:chr_file { read ioctl open };
+allow recovery sec_ro_device:chr_file { read open };
+allow recovery seccfg_device:chr_file { read open };
+allow recovery self:capability sys_boot;
+
+# Date : WK14.46
+# Operation : Migration 
+# Purpose : FOTA upgrade
+allow recovery app_data_file:dir { write create add_name };
+allow recovery app_data_file:dir { read open };
+allow recovery app_data_file:file { read write create open };
+allow recovery mobicore_data_file:dir { write remove_name search add_name };
+allow recovery mobicore_data_file:file { rename setattr read create write getattr unlink open };
+allow recovery mobicore_data_file:file { relabelfrom relabelto };
+
+# Date : WK14.47
+# Operation : Migration 
+# Purpose : Root Integrity Check
+allow recovery md_ctrl:file { read getattr open };
+allow recovery mobicore_data_file:dir { read open };
