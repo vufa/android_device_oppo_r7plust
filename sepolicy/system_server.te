@@ -50,7 +50,7 @@ allow system_server mnld_data_file:dir rw_dir_perms;
 # Date : WK14.37
 # Operation : Migration 
 # Purpose : for idling on homescreen
-allow system_server guiext-server:binder { transfer call };
+#allow system_server guiext-server:binder { transfer call };
 allow system_server touch_device:chr_file write;
 
 # Date : WK14.37
@@ -187,7 +187,7 @@ allow system_server dex2oat_exec:file rx_file_perms;
 # Date: WK14.47
 # Operation : Sanity
 # Purpose : for searching directories in sdcard by VoldConnector
-allow system_server fuse:dir r_dir_perms;
+#allow system_server fuse:dir r_dir_perms;
 
 # Date: WK14.47
 # Operation : CTS
@@ -227,5 +227,5 @@ unix_socket_connect(system_server, wod_sim, epdg_wod)
 
 # Date: WK15.05
 # Purpose : for kill-switch should only grant to access frp partition, to be fix
-allow system_server platformblk_device:blk_file { ioctl getattr open write read };
+#allow system_server platformblk_device:blk_file { ioctl getattr open write read };
 allow system_server platformblk_device:dir search;

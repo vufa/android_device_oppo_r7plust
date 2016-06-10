@@ -50,7 +50,7 @@ allow system_app atci_service:unix_stream_socket connectto;
 # Stage: BaseUT
 # Purpose: [BatteryWarning][View update graphics]
 # Package Name: com.mediatek.batterywarning
-allow system_app guiext-server:binder { transfer call };
+#allow system_app guiext-server:binder { transfer call };
 
 # Date: 2014/09/02
 # Operation: BaseUT

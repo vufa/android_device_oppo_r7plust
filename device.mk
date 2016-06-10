@@ -45,8 +45,9 @@ PRODUCT_PACKAGES += \
     libion_mtk \
     libui_ext \
     libgui_ext \
-    guiext-server \
     librrc
+#    guiext-server \
+    
 
 # Lights
 PRODUCT_PACKAGES += \

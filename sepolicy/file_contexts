@@ -337,7 +337,6 @@
 /system/bin/GoogleOtaBinder u:object_r:GoogleOtaBinder_exec:s0
 /system/bin/gsm0710muxdmd2 u:object_r:gsm0710muxdmd2_exec:s0
 /system/bin/gsm0710muxd u:object_r:gsm0710muxd_exec:s0
-/system/bin/guiext-server u:object_r:guiext-server_exec:s0
 /system/bin/icusbd u:object_r:icusbd_exec:s0
 /system/bin/init.gprs-pppd u:object_r:zpppd_gprs_exec:s0
 /system/bin/ipod u:object_r:ipod_exec:s0
@@ -370,7 +369,6 @@
 /system/bin/pppd_dt u:object_r:pppd_dt_exec:s0
 /system/bin/pppd_via u:object_r:pppd_via_exec:s0
 /system/bin/pq u:object_r:pq_exec:s0
-/system/bin/program_binary_service u:object_r:program_binary_exec:s0
 /system/bin/resmon u:object_r:resmon_exec:s0
 /system/bin/rild_dongle u:object_r:ril-3gddaemon_exec:s0
 /system/bin/s62xd u:object_r:s62xd_exec:s0
