@@ -42,7 +42,7 @@ BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 # Kernel
 TARGET_USES_64_BIT_BINDER := true
 TARGET_IS_64_BIT := true
-BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=disabled
 BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --base 0x40078000 --pagesize 2048 --kernel_offset 0x00008000 --ramdisk_offset 0x03f88000 --second_offset 0x00e88000 --tags_offset 0x0df88000 --board $(BUILD_NUMBER)
@@ -209,11 +209,11 @@ TARGET_MKIMAGE := $(LOCAL_PATH)/mkimage
 TARGET_USE_BUILT_BOOTIMAGE := true
 
 # SELinux
-BOARD_SEPOLICY_DIRS += \
-    $(DEVICE_FOLDER_COMMON)/sepolicy
+#BOARD_SEPOLICY_DIRS += \
+#    $(DEVICE_FOLDER_COMMON)/sepolicy
 
 # NOTE: remove this once Marshmallow kernel is available
-POLICYVERS := 30
+POLICYVERS := 29
 
 # Hack for building without kernel sources
 $(shell mkdir -p $(OUT)/obj/KERNEL_OBJ/usr)
