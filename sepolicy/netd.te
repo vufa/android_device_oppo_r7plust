@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ==============================================
 # MTK Policy Rule
 # ==============================================
@@ -5,10 +6,13 @@
 type dhcp6s_exec,exec_type,file_type;
 
 
+=======
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 # Date : WK14.34
 # Operation : Migration
 # Purpose :  wifi  
 allow netd wmtWifi_device:chr_file { write open };
+<<<<<<< HEAD
 
 allow netd kernel:system module_request;
 allow netd self:capability sys_module;
@@ -118,3 +122,5 @@ allow netd radio_tmpfs:file write;
 
 
 
+=======
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa

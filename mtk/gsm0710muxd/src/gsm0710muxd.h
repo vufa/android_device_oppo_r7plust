@@ -37,22 +37,40 @@
 #define __GSM0710MUXD_H
 /******************************************************************************/
 
+<<<<<<< HEAD
 #ifdef MTK_GEMINI
 #define __ANDROID_GEMINI_SUPPORT__
+=======
+#if defined(ANDROID_SIM_COUNT_2)
+#define SIM_COUNT 2
+#elif defined(ANDROID_SIM_COUNT_3)
+#define SIM_COUNT 3
+#elif defined(ANDROID_SIM_COUNT_4)
+#define SIM_COUNT 4
+#else
+#define SIM_COUNT 1
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 #endif
 
 /******************************************************************************/
 
+<<<<<<< HEAD
 // Define the maxium number of channel that gsm0710muxd could support
 #define GSM0710_MAX_CHANNELS 32
 
+=======
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 #define GSM0710_WRITE_RETRIES 5
 // Defines how often the modem is polled when automatic restarting is
 // enabled The value is in seconds
 #define GSM0710_POLLING_INTERVAL 5
 /* Note by LS: GSM0710_BUFFER_SIZE must be larger than MAX N1 value of all channnels */
 /* In this way, assemble_frame_thread can extract a complete MUX frame from the serial buffer then signal the thread_serial_device_read() to continue put data into serial buffer again */
+<<<<<<< HEAD
 #define GSM0710_BUFFER_SIZE 2048
+=======
+#define GSM0710_BUFFER_SIZE 4096
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 /******************************************************************************/
 
@@ -73,14 +91,29 @@
 #define MUXD_CH_NUM_RILD    5
 #define MUXD_CH_NUM_PDP     0
 #define MUXD_CH_ATCI        1
+<<<<<<< HEAD
 
 #ifdef __ANDROID_VT_SUPPORT__ 
 #define MUXD_CH_NUM_VT      1
+=======
+#define MUXD_CH_NUM_CSD     1
+
+#ifdef __ANDROID_VT_SUPPORT__
+#ifdef MTK_RIL_MD2
+#define MUXD_CH_NUM_VT      0
+#else
+#define MUXD_CH_NUM_VT      1
+#endif
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 #else
 #define MUXD_CH_NUM_VT      0
 #endif
 
 #define MUXD_VT_CH_NUM      24
+<<<<<<< HEAD
+=======
+#define MUXD_CSD_CH_NUM     30
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 #if defined(__CCMNI_SUPPORT__) && defined(__MUX_UT__)
 #define MUXD_CH_NUM_TEST    3
@@ -88,6 +121,7 @@
 #define MUXD_CH_NUM_TEST    0
 #endif
 
+<<<<<<< HEAD
 #ifdef __ANDROID_GEMINI_SUPPORT__ 
 #define MUXD_CH_NUM_ALL     (MUXD_CH_NUM_CCH + \
                             ((MUXD_CH_NUM_RILD + MUXD_CH_NUM_PDP + MUXD_CH_ATCI) * 2) + \
@@ -100,6 +134,9 @@
                             MUXD_CH_NUM_TEST)
 #endif
 #endif
+=======
+#endif /*MUX_ANDROID*/
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 /******************************************************************************/
 
@@ -119,6 +156,7 @@
 #include <syslog.h>
 //#define LOG(lvl, f, ...) do{if(lvl<=syslog_level)syslog(lvl,"%s:%d:%s(): " f "\n", __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__);}while(0)
 #define LOGMUX(lvl,f,...) do{if(lvl<=syslog_level){\
+<<<<<<< HEAD
 								if (logtofile){\
 								  fprintf(muxlogfile,"%d:%s(): " f "\n", __LINE__, __FUNCTION__, ##__VA_ARGS__);\
 								  fflush(muxlogfile);}\
@@ -132,11 +170,27 @@
 #define LOG_TAG "MUXD"
 #else
 #define LOG_TAG "MUXDMD2"
+=======
+                                if (logtofile){\
+                                  fprintf(muxlogfile,"%d:%s(): " f "\n", __LINE__, __FUNCTION__, ##__VA_ARGS__);\
+                                  fflush(muxlogfile);}\
+                                else\
+                                  fprintf(stderr,"%d:%s(): " f "\n", __LINE__, __FUNCTION__, ##__VA_ARGS__);\
+                                }\
+                            }while(0)
+#else //will enable logging using android logging framework (not to file)
+
+#ifdef MTK_RIL_MD1
+#define LOG_TAG "RILMUXD"
+#else
+#define LOG_TAG "RILMUXDMD2"
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 #endif
 
 #include <utils/Log.h> //all Android LOG macros are defined here.
 
 //just dummy defines since were not including syslog.h.
+<<<<<<< HEAD
 #define LOG_EMERG	0
 #define LOG_ALERT	1
 #define LOG_CRIT	2
@@ -156,6 +210,25 @@
 								LOG_PRI(android_log_lvl_convert[lvl], LOG_TAG, \
 								"[gsm0710muxdmd2] %d:%s(): " f, __LINE__, __FUNCTION__, ##__VA_ARGS__);}\
 						  }while(0)
+=======
+#define LOG_EMERG    0
+#define LOG_ALERT    1
+#define LOG_CRIT    2
+#define LOG_ERR        3
+#define LOG_WARNING    4
+#define LOG_NOTICE    5
+#define LOG_INFO    6
+#define LOG_DEBUG    7
+
+#ifdef MTK_RIL_MD1
+#define LOGMUX(lvl,f,...) do{if(lvl<=syslog_level){\
+                                RLOGD("[gsm0710muxd] %d:%s(): " f, __LINE__, __FUNCTION__, ##__VA_ARGS__);}\
+                          }while(0)
+#else
+#define LOGMUX(lvl,f,...) do{if(lvl<=syslog_level){\
+                                RLOGD("[gsm0710muxdmd2] %d:%s(): " f, __LINE__, __FUNCTION__, ##__VA_ARGS__);}\
+                          }while(0)
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 #endif
 
 #endif /*MUX_ANDROID*/
@@ -164,8 +237,13 @@
 
 #define SYSCHECK(c) do{if((c)<0){ \
                         LOGMUX(LOG_ERR,"system-error: '%s' (code: %d)", strerror(errno), errno);\
+<<<<<<< HEAD
 						return -1;}\
 					}while(0)
+=======
+                        return -1;}\
+                    }while(0)
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 #ifndef min
 #define min(a,b) ((a < b) ? a :b)
 #endif
@@ -178,7 +256,11 @@
 #define gsm0710_buffer_inc(readp,datacount) do { readp++; datacount--; \
                                        if (readp == buf->endp) readp = buf->data; \
                                      } while (0)
+<<<<<<< HEAD
                                      
+=======
+
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 /* Tells how many chars are saved into the buffer. */
 //int gsm0710_buffer_length(GSM0710_Buffer *buf);
 //#define gsm0710_buffer_length(buf) ((buf->readp > buf->writep) ? (GSM0710_BUFFER_SIZE - (buf->readp - buf->writep)) : (buf->writep-buf->readp))
@@ -198,13 +280,22 @@
 /******************************************************************************/
 
 /* Add by LS to test by local define compile option */
+<<<<<<< HEAD
 #ifndef __PRODUCTION_RELEASE__ 
+=======
+#ifndef __PRODUCTION_RELEASE__
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 #define Gsm0710Muxd_Assert(index)                       \
 {                                                       \
     LOGMUX(LOG_ERR, "ASSERT : ERROR_CODE=%d", index);   \
     LOG_ALWAYS_FATAL("ASSERT!!!!");                     \
+<<<<<<< HEAD
 }                                                
 #else                         
+=======
+}
+#else
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 static int g_set_force_assert_flag = 0;
 static int g_set_alarm_flag = 0;
 #define Gsm0710Muxd_Assert(index)                       \
@@ -270,8 +361,13 @@ static int g_set_alarm_flag = 0;
 /* TYPES                                                                                                                               */
 /******************************************************************************/
 
+<<<<<<< HEAD
 typedef enum MSC_FC_CMD_STATE 
 { 
+=======
+typedef enum MSC_FC_CMD_STATE
+{
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
     FC_NONE = 0,
     FC_OFF_SENDING,
     FC_ON_SENDING
@@ -295,21 +391,33 @@ typedef enum MuxerStates
 typedef enum SETUP_PTY_CHNL_TYPE
 {
     SETUP_PTY_CHNL_WO_RESTART=0,
+<<<<<<< HEAD
     SETUP_PTY_CHNL_W_RESTART    
+=======
+    SETUP_PTY_CHNL_W_RESTART
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 } SETUP_PTY_CHNL_TYPE;
 
 /* Add by LS */
 typedef enum SHUTDOWN_DEV_TYPE
 {
     SHUTDOWN_DEV_WO_ACTIVE_FINALIZED=0,
+<<<<<<< HEAD
     SHUTDOWN_DEV_W_ACTIVE_FINALIZED    
+=======
+    SHUTDOWN_DEV_W_ACTIVE_FINALIZED
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 } SHUTDOWN_DEV_TYPE;
 
 /* Add by LS: Define the Gsm0710Muxd General Error Code */
 typedef enum GSM0710MUXD_GENERAL_ERR_CODE
 {
     GSM0710MUXD_SUCCESS = 0,
+<<<<<<< HEAD
     GSM0710MUXD_EXCEED_SUPPORTED_VP_NUM,    
+=======
+    GSM0710MUXD_EXCEED_SUPPORTED_VP_NUM,
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
     GSM0710MUXD_CREATE_THREAD_ERR,
     GSM0710MUXD_PTY_READ_ERR,
     GSM0710MUXD_PTY_WRITE_ERR,
@@ -339,6 +447,7 @@ typedef struct GSM0710_Frame
     unsigned char control;
     int length;
     unsigned char *data;
+<<<<<<< HEAD
     
 } GSM0710_Frame;
 
@@ -352,6 +461,21 @@ typedef struct GSM0710_FrameList
 /* Size of struct GSM0710_Buffer is larger than GSM0710_BUFFER_SIZE */
 /* Note by LS: basic mode and advanced mode should be exclusive: 
   * but adv_data[] is copied from the data[] one by one byte in the gsm0710_advanced_buffer_get_frame 
+=======
+
+} GSM0710_Frame;
+
+typedef struct GSM0710_FrameList
+{
+    GSM0710_Frame*  frame;
+    struct GSM0710_FrameList* next;
+
+}GSM0710_FrameList;
+
+/* Size of struct GSM0710_Buffer is larger than GSM0710_BUFFER_SIZE */
+/* Note by LS: basic mode and advanced mode should be exclusive:
+  * but adv_data[] is copied from the data[] one by one byte in the gsm0710_advanced_buffer_get_frame
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
   */
 typedef struct GSM0710_Buffer
 {
@@ -377,7 +501,11 @@ typedef struct GSM0710_Buffer
     // signal
     pthread_cond_t newdataready_signal;
     pthread_cond_t bufferready_signal;
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 } GSM0710_Buffer;
 
 /* Add by LS */
@@ -394,7 +522,11 @@ typedef struct Channel // Channel data
     int id; // gsm 0710 channel id
 
     int fd;
+<<<<<<< HEAD
     char* devicename;    
+=======
+    char* devicename;
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
     char* ptsname;
     char* ptslink;
 
@@ -405,10 +537,17 @@ typedef struct Channel // Channel data
     char* origin;
     int remaining;
     unsigned char *tmp;
+<<<<<<< HEAD
 #endif 
 
     int negotiated_N1;
     unsigned char v24_signals;   
+=======
+#endif
+
+    int negotiated_N1;
+    unsigned char v24_signals;
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 #ifdef __MUXD_FLOWCONTROL__
     /* For TX flow control usage of each non-control channel */
@@ -418,24 +557,40 @@ typedef struct Channel // Channel data
 
     pthread_mutex_t rx_fc_lock;
     pthread_cond_t  rx_fc_on_signal;
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
     GSM0710_FrameList*  rx_fl;
     unsigned int        rx_fl_total;
     unsigned int        rx_fl_written;
 
     //Thread
     pthread_t push_thread_id;
+<<<<<<< HEAD
 #endif /* __MUXD_FLOWCONTROL__ */    
+=======
+#endif /* __MUXD_FLOWCONTROL__ */
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
     pthread_t poll_thread_id;
 
 } Channel;
 
 typedef struct Serial
+<<<<<<< HEAD
 {	
+=======
+{
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
     char *devicename;
     int fd;
     MuxerStates state;
     GSM0710_Buffer *in_buf;// input buffer
+<<<<<<< HEAD
+=======
+    GSM0710_Buffer *in_buf_for_bootup;
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 #ifdef __MUX_UT__
     GSM0710_Buffer *ut_in_buf;//ut input buffer
 #endif
@@ -461,8 +616,13 @@ typedef struct Channel_Config
     int     pn_dlci;
     int     pn_n1;
 
+<<<<<<< HEAD
     char*   s_path;   
     
+=======
+    char*   s_path;
+
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 } Channel_Config;
 
 /******************************************************************************/
@@ -480,4 +640,7 @@ extern unsigned char msc_channel_cmd[];
 
 /******************************************************************************/
 #endif /* __GSM0710MUXD_H */
+<<<<<<< HEAD
 
+=======
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa

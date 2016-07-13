@@ -15,6 +15,7 @@ import /init.cm.rc
 
 
 on early-init
+
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_score_adj -1000
 
@@ -216,6 +217,15 @@ on init
 
 # Healthd can trigger a full boot from charger mode by signaling this
 # property when the power button is held.
+# start log service
+    start logd
+
+on property:service.logcat.enable=1
+    start logcat_service
+
+on property:service.logcat.enable=0
+    stop logcat_service
+
 on property:sys.boot_from_charger_mode=1
     class_stop charger
     trigger late-init
@@ -565,6 +575,18 @@ on property:sys.sysctl.tcp_def_init_rwnd=*
 
 ## Daemon processes to be run by init.
 ##
+# log services
+service logcat_service /system/bin/logcat -b system -b events -b main -b radio -k -n 10 -v threadtime -r5000 -f /data/Logs/Log.0/logcat.log
+    user root
+    group log system
+    class main
+       disabled
+
+service logd /system/bin/sh /system/bin/logd.sh
+    user system
+    group log
+    oneshot
+#
 service ueventd /sbin/ueventd
     class core
     critical

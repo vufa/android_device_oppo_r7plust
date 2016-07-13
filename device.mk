@@ -39,10 +39,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     asec_helper
 
+<<<<<<< HEAD
 # workaround proximity sensor sometimes losing calibration after making a call
 PRODUCT_PACKAGES += \
     meizupshelper
 
+=======
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 # Display
 PRODUCT_PACKAGES += \
     libgralloc_extra \
@@ -51,6 +54,10 @@ PRODUCT_PACKAGES += \
     libgui_ext \
     guiext-server \
     librrc
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 # Lights
 PRODUCT_PACKAGES += \
@@ -164,6 +171,28 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     gps.mt6595 \
     mtk_agpsd \
+<<<<<<< HEAD
+
+# Vibration
+PRODUCT_PACKAGES += \
+    openimmvibed \
+
+
+# Keylayout
+PRODUCT_COPY_FILES += \
+     device/oppo/r7plust/configs/mtk-kpd.kl:system/usr/keylayout/mtk-kpd.kl \
+     device/oppo/r7plust/configs/ACCDET.kl:system/usr/keylayout/ACCDET.kl\
+     device/oppo/r7plust/configs/AVRCP.kl:system/usr/keylayout/AVRCP.kl   
+
+# Thermal
+PRODUCT_COPY_FILES += \
+     device/oppo/r7plust/configs/.ht120.mtc:system/etc/.tp/.ht120.mtc \
+     device/oppo/r7plust/configs/thermal.conf:system/etc/.tp/thermal.conf \
+     device/oppo/r7plust/configs/thermal.off.conf:system/etc/.tp/thermal.off.conf \
+     device/oppo/r7plust/configs/.thermal_policy_00:system/etc/.tp/.thermal_policy_00 \
+     device/oppo/r7plust/configs/.thermal_policy_01:system/etc/.tp/.thermal_policy_01 
+=======
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 # Vibration
 PRODUCT_PACKAGES += \
@@ -185,9 +214,9 @@ PRODUCT_COPY_FILES += \
      device/oppo/r7plust/configs/.thermal_policy_01:system/etc/.tp/.thermal_policy_01 
 
 # Ramdisk 
-PRODUCT_PACKAGES += \
-     healthd \
-     init
+#PRODUCT_PACKAGES += \
+#     healthd \
+#     init
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ramdisk/enableswap.sh:root/enableswap.sh \
     $(LOCAL_PATH)/ramdisk/fstab.charger:root/fstab.charger\
@@ -208,6 +237,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ramdisk/meta_init.project.rc:root/meta_init.project.rc \
     $(LOCAL_PATH)/ramdisk/meta_init.rc:root/meta_init.rc \
     $(LOCAL_PATH)/ramdisk/init.rc:root/init.rc \
+#    $(LOCAL_PATH)/ramdisk/init:root/init \
+#    $(LOCAL_PATH)/ramdisk/healthd:sbin/healthd \
 #    $(LOCAL_PATH)/ramdisk/init.trace.rc:root/init.trace.rc \
 #    $(LOCAL_PATH)/ramdisk/init.zygote32_64.rc:root/init.zygote32_64.rc \
 #    $(LOCAL_PATH)/ramdisk/init.zygote32.rc:root/init.zygote32.rc \
@@ -215,9 +246,11 @@ PRODUCT_COPY_FILES += \
 #    $(LOCAL_PATH)/ramdisk/init.zygote64.rc:root/init.zygote64.rc \
 #    $(LOCAL_PATH)/ramdisk/ueventd.rc:root/ueventd.rc \
 #    $(LOCAL_PATH)/ramdisk/init.environ.rc.in:root/init.environ.rc.in \
-#    $(LOCAL_PATH)/ramdisk/healthd:sbin/healthd \
-#    $(LOCAL_PATH)/ramdisk/init:root/init \
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
     device/oppo/r7plust/configs/android.hardware.microphone.xml:system/etc/permissions/android.hardware.microphone.xml \

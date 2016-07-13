@@ -7,6 +7,7 @@
 #############################
 # Data files
 #
+<<<<<<< HEAD
 /data/aee_exp(/.*)?  u:object_r:aee_exp_data_file:s0
 /data/agps_supl(/.*)?    u:object_r:agpsd_data_file:s0
 /data/anr/SF_RTT(/.*)? u:object_r:sf_rtt_file:s0
@@ -410,3 +411,12 @@
 
 # Wallpaper file for smartbook
 /data/system/users/[0-9]+/smartbook_wallpaper	u:object_r:wallpaper_file:s0
+=======
+# GPU device
+/dev/mali.* u:object_r:gpu_device:s0
+/dev/mtkfb_vsync(/.*)? u:object_r:graphics_device:s0
+
+# Wifi device
+/dev/wmtWifi(/.*)? u:object_r:wmtWifi_device:s0
+
+>>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
