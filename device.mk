@@ -269,16 +269,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mtp \
     ro.hardware=mt6795 \
 
-# NFC
-#PRODUCT_PACKAGES += \
-#    com.android.nfc_extras \
-#    Tag
-#PRODUCT_COPY_FILES += \
-#    packages/apps/Nfc/migrate_nfc.txt:system/etc/updatecmds/migrate_nfc.txt \
-#    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
-#    frameworks/native/data/etc/com.nxp.mifare.xml:system/etc/permissions/com.nxp.mifare.xml \
-#    frameworks/native/data/etc/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml
-
 # Ifaddrs
 PRODUCT_PACKAGES += \
     libifaddrs
