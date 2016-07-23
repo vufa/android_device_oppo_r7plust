@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ==============================================
 # MTK Policy Rule
 # ==============================================
@@ -159,7 +158,3 @@ type keyblock_device, dev_type;
 type offloadservice_device, dev_type;
 type ttyACM_device, dev_type;
 type hrm_device, dev_type;
-=======
-# Wifi device used by net daemon
-type wmtWifi_device, dev_type;
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
