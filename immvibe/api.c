@@ -1,15 +1,6 @@
-<<<<<<< HEAD
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
-=======
-#define LOG_TAG "libimmvibeclient"
-
-#include <stdio.h>
-#include <errno.h>
-#include <unistd.h>
-#include <cutils/log.h>
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 #include <cutils/properties.h>
 
 #include "immvibeclient.h"
@@ -29,11 +20,7 @@ static uint8_t get_force_userspace_legacy(void)
 
 	fp = fopen(FORCE_STORE_PATH, "r");
 	if (!fp) {
-<<<<<<< HEAD
 		/* TODO: log */
-=======
-		ALOGW("legacy store unaccessible but attempted access, should never happen");
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 		/* return the default value */
 		return DEFAULT_FORCE;
 	}
@@ -58,11 +45,7 @@ static void migrate_force_store(uint8_t force)
 		 * Shouldn't continue deleting the known-good legacy store as that
 		 * would result in user preference loss.
 		 */
-<<<<<<< HEAD
 		/* TODO: log */
-=======
-		ALOGW("property write failed (ret = %d)! keeping legacy pref", ret);
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 		return;
 	}
 
@@ -77,12 +60,6 @@ uint8_t immvibe_api_get_force_userspace(void)
 
 	ret = access(FORCE_STORE_PATH, F_OK);
 	if (ret) {
-<<<<<<< HEAD
-=======
-		int errsv = errno;
-		ALOGV("access(%s, F_OK) = %d", FORCE_STORE_PATH, errsv);
-
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 		/* Legacy store inaccessible, use new property-based store */
 		return (uint8_t) property_get_int32(FORCE_STORE_PROP, DEFAULT_FORCE);
 	}
