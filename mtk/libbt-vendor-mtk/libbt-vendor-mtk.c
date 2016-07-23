@@ -75,9 +75,10 @@ int mtk_init(const bt_vendor_callbacks_t* p_cb, unsigned char *local_bdaddr) {
   dlerror();
 
   mtklib_handle = dlopen("libbluetoothdrv.so", RTLD_LAZY);
+  int mtklib_handlecode = *(int *)mtklib_handle;
   if (! mtklib_handle) {
     ALOGE("Failed to open libbluetoothdrv library");
-    return (int)mtklib_handle;
+    return mtklib_handlecode;
   }
 
   mtk_bt_enable = dlsym(mtklib_handle, "mtk_bt_enable");

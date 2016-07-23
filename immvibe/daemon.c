@@ -46,7 +46,7 @@ static void *worker_thread_proc(void *arg)
 
 		switch (msg.msgtype) {
 			case MSG_VIBRATE: {
-				int duration = (int)msg.data;
+				int duration = *(int *)msg.data;
 				uint8_t force = immvibe_api_get_force_userspace();
 				ALOGV("worker: vibrate(duration=%d, force=%d)", duration, force);
 
@@ -87,8 +87,10 @@ static void process_buf(const char *buf, int count __attribute__((unused)))
 				return;
 			}
 
+                        void * durationcode;
 			ALOGV("process_buf: vibrate(duration=%d)", duration);
-			thread_queue_add(&work_queue, (void *)duration, MSG_VIBRATE);
+                        durationcode = &duration;
+			thread_queue_add(&work_queue, durationcode, MSG_VIBRATE);
 			break;
 		}
 
