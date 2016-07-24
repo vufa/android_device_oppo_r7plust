@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.cyanogenmod.hardware;
+package org.mokee.hardware;
 
 import android.os.SystemProperties;
 
-import org.cyanogenmod.hardware.util.FileUtils;
+import org.mokee.hardware.util.FileUtils;
 
 /**
  * Tap (usually double-tap) to wake. This *should always* be supported by
