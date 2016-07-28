@@ -18,11 +18,8 @@
  *  limitations under the License.
  */
 #include <cutils/log.h>
-<<<<<<< HEAD
-=======
-#include <string.h>
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 #include <errno.h>
+#include <string.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/ioctl.h>

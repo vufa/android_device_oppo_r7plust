@@ -12,7 +12,6 @@ type ppp_data_file, file_type, data_file_type;
 type wide_dhcpv6_data_file, file_type, data_file_type;
 type wpa_supplicant_data_file, file_type, data_file_type;
 type radvd_data_file, file_type, data_file_type;
-<<<<<<< HEAD
 # Date : WK14.37
 # Operation : Migration
 # Purpose : SF rtt dump
@@ -145,11 +144,3 @@ type iso9660, fs_type;
 
 # data_tmpfs_log
 type data_tmpfs_log_file, file_type, data_file_type;
-=======
-
-# 20131213 KKMR1_CQ_CTS_02
-#allow cache_file rootfs:filesystem associate;
-
-
-allow custom_file rootfs:filesystem associate;
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
