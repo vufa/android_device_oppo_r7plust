@@ -10,7 +10,8 @@ TARGET_NO_BOOTLOADER := true
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_NO_FACTORYIMAGE := true
 
-TARGET_LDPRELOAD += libxlog.so:libmtkabi.so
+TARGET_LDPRELOAD += libxlog.so
+#:libmtkabi.so
 
 # Architecture
 TARGET_ARCH := arm64
@@ -167,6 +168,9 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 
 # system.prop
 TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
+
+#for zip
+BLOCK_BASED_OTA := true
 
 # RECOVERY
 BOARD_HAS_NO_SELECT_BUTTON := true
