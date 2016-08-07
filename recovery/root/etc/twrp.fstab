@@ -10,5 +10,5 @@
 /protect_s      ext4    /dev/block/platform/mtk-msdc.0/by-name/protect2    noatime,nosuid,nodev,noauto_da_alloc,commit=1,nodelalloc    wait,check,autoformat
 /boot           emmc    /dev/block/platform/mtk-msdc.0/by-name/boot        defaults                                                    defaults
 /recovery       emmc    /dev/block/platform/mtk-msdc.0/by-name/recovery    defaults                                                    defaults
-/misc           emmc    /dev/block/platform/mtk-msdc.0/by-name/para        defaults                                                    defaults
+/nvram          emmc    /dev/block/platform/mtk-msdc.0/by-name/nvram       defaults                                                    defaults                                                    defaults
 
