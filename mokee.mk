@@ -8,7 +8,7 @@ $(call inherit-product, vendor/mk/config/common_full_phone.mk)
 $(call inherit-product, device/oppo/r7plust/full_r7plust.mk)
 
 #sign the kernel
-$(call inherit-product, $(SRC_TARGET_DIR)/product/verity.mk)
+#$(call inherit-product, $(SRC_TARGET_DIR)/product/verity.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := r7plust

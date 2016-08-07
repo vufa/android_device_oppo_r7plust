@@ -4,6 +4,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # The gps config appropriate for this device
 $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
+$(call inherit-product, vendor/oppo/r7plust/r7plust-vendor-blobs.mk)
+
 $(call inherit-product-if-exists, vendor/oppo/r7plust/r7plust-vendor-blobs.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/oppo/r7plust/overlay
@@ -17,7 +19,7 @@ else
 endif
 
 PRODUCT_PACKAGES += \
-    libxlog
+   libxlog
 
 # be a chinese
 EXTENDED_FONT_FOOTPRINT := true
@@ -217,10 +219,10 @@ PRODUCT_COPY_FILES += \
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
-    device/oppo/r7plust/configs/android.hardware.microphone.xml:system/etc/permissions/android.hardware.microphone.xml \
+    $(LOCAL_PATH)/configs/android.hardware.microphone.xml:system/etc/permissions/android.hardware.microphone.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.camera.autofocus.xml:system/etc/permissions/android.hardware.camera.autofocus.xml \
-    device/oppo/r7plust/configs/android.hardware.camera.xml:system/etc/permissions/android.hardware.camera.xml \
+    $(LOCAL_PATH)/configs/android.hardware.camera.xml:system/etc/permissions/android.hardware.camera.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
@@ -254,9 +256,9 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml
 
 PRODUCT_COPY_FILES += \
-	device/oppo/r7plust/configs/media_codecs.xml:system/etc/media_codecs.xml \
-	device/oppo/r7plust/configs/media_codecs.xml:system/etc/permissions/media_codecs.xml \
-	device/oppo/r7plust/configs/media_profiles.xml:system/etc/media_profiles.xml
+	$(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
+	$(LOCAL_PATH)/configs/media_codecs.xml:system/etc/permissions/media_codecs.xml \
+	$(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
@@ -278,23 +280,22 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
      ro.adb.secure=0 \
-     ro.secure=1 \
+     ro.secure=0 \
      ro.allow.mock.location=1 \
      ro.debuggable=1 \
      ro.zygote=zygote64_32 \
      camera.disable_zsl_mode=1 \
      ro.mount.fs=EXT4 \
      persist.service.acm.enable=0 \
-     persist.sys.usb.config=mtp,mass_storage \
-     persist.sys.timezone=Asia/Shanghai
+     persist.sys.usb.config=mtp,mass_storage,adb
 
 PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.timezone=Asia/Shanghai \
     ro.kernel.android.checkjni=0 \
     ro.telephony.ril_class=MediaTekRIL \
     ro.telephony.ril.config=fakeiccid  \
     persist.call_recording.enabled=true \
-    persist.call_recording.src=4 \
-    persist.debug.wfd.enable=1
+    persist.call_recording.src=1
 
 PRODUCT_PACKAGES += \
     librs_jni \

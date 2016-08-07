@@ -16,7 +16,7 @@ BOARD_HAS_LARGE_FILESYSTEM := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun/file
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := r7plus,r7plust,R7Plust
+TARGET_OTA_ASSERT_DEVICE := r7plus,r7plust,R7Plus,R7Plust
 
 # Assertions
 TARGET_BOARD_INFO_FILE ?= $(DEVICE_FOLDER)/board-info.txt

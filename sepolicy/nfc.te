@@ -80,7 +80,7 @@ allow nfc self:tcp_socket { setopt read bind create accept write getattr connect
 # Operation : Refine
 # Purpose   : For Gallery3d
 
-allow nfc init:binder { transfer };
+#allow nfc init:binder { transfer };
 
 
 # ==============================================
