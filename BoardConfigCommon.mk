@@ -3,8 +3,6 @@
 
 LOCAL_PATH := device/oppo/r7plust
 
-DEVICE_FOLDER_COMMON := device/oppo/r7plust
-
 # Platform
 ARCH_ARM_HAVE_TLS_REGISTER := true
 TARGET_BOARD_PLATFORM := mt6795
@@ -12,7 +10,8 @@ TARGET_NO_BOOTLOADER := true
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_NO_FACTORYIMAGE := true
 
-TARGET_LDPRELOAD += libxlog.so:libmtkabi.so
+TARGET_LDPRELOAD += libxlog.so
+#:libmtkabi.so
 
 # Architecture
 TARGET_ARCH := arm64
@@ -42,17 +41,10 @@ BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 # Kernel
 TARGET_USES_64_BIT_BINDER := true
 TARGET_IS_64_BIT := true
-<<<<<<< HEAD
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_MKBOOTIMG_ARGS := --base 0x40078000 --pagesize 2048 --kernel_offset 0x00008000 --ramdisk_offset 0x03f88000 --second_offset 0x00e88000 --tags_offset 0x0df88000 --board Bule
-=======
-BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=disabled
-BOARD_KERNEL_BASE := 0x40078000
-BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --base 0x40078000 --pagesize 2048 --kernel_offset 0x00008000 --ramdisk_offset 0x03f88000 --second_offset 0x00e88000 --tags_offset 0x0df88000 --board $(BUILD_NUMBER)
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/prebuilt/kernel
 BOARD_CUSTOM_BOOTIMG := true
 
@@ -79,15 +71,11 @@ COMMON_GLOBAL_CFLAGS += -DMTK_HARDWARE -DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
 COMMON_GLOBAL_CPPFLAGS += -DMTK_HARDWARE
 
 BOARD_HAVE_OPENSOURCE_IMMVIBE := true
-BOARD_HARDWARE_CLASS := $(DEVICE_FOLDER_COMMON)/cmhw
+BOARD_HARDWARE_CLASS := $(LOCAL_PATH)/cmhw
 
 # RIL
 # moved to forked frameworks_opt_telephony repo
-<<<<<<< HEAD
-BOARD_RIL_CLASS := ../../../$(DEVICE_FOLDER)/ril/
-=======
 #BOARD_RIL_CLASS := ../../../$(DEVICE_FOLDER)/ril/
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 MTK_CIP_SUPPORT := yes
 MTK_DT_SUPPORT := no
 MTK_VT3G324M_SUPPORT := no
@@ -176,12 +164,15 @@ WIFI_DRIVER_FW_PATH_P2P:=P2P
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_MTK := true
 BOARD_BLUETOOTH_DOES_NOT_USE_RFKILL := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(DEVICE_FOLDER_COMMON)/bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 
 # system.prop
-TARGET_SYSTEM_PROP := $(DEVICE_FOLDER_COMMON)/system.prop
+TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
 
-# RECOVERY
+#for zip
+BLOCK_BASED_OTA := true
+
+# CWM
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_RECOVERY_SWIPE := true
 BOARD_SUPPRESS_EMMC_WIPE := true
@@ -220,13 +211,8 @@ TARGET_MKIMAGE := $(LOCAL_PATH)/mkimage
 TARGET_USE_BUILT_BOOTIMAGE := true
 
 # SELinux
-<<<<<<< HEAD
 BOARD_SEPOLICY_DIRS += \
-    $(DEVICE_FOLDER_COMMON)/sepolicy
-=======
-#BOARD_SEPOLICY_DIRS += \
-#    $(DEVICE_FOLDER_COMMON)/sepolicy
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
+    $(LOCAL_PATH)/sepolicy
 
 # NOTE: remove this once Marshmallow kernel is available
 POLICYVERS := 29

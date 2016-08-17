@@ -4,6 +4,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # The gps config appropriate for this device
 $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
+$(call inherit-product, vendor/oppo/r7plust/r7plust-vendor-blobs.mk)
+
 $(call inherit-product-if-exists, vendor/oppo/r7plust/r7plust-vendor-blobs.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/oppo/r7plust/overlay
@@ -17,7 +19,7 @@ else
 endif
 
 PRODUCT_PACKAGES += \
-    libxlog
+   libxlog
 
 # be a chinese
 EXTENDED_FONT_FOOTPRINT := true
@@ -32,20 +34,13 @@ PRODUCT_PACKAGES += \
 
 # various MTK ABI fixes
 # this is the approach of the cm-13.0 sprout port
-PRODUCT_PACKAGES += \
-    libmtkabi
+#PRODUCT_PACKAGES += \
+#    libmtkabi
 
 # hack to fix asec on emulated sdcard
 PRODUCT_PACKAGES += \
     asec_helper
 
-<<<<<<< HEAD
-# workaround proximity sensor sometimes losing calibration after making a call
-PRODUCT_PACKAGES += \
-    meizupshelper
-
-=======
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 # Display
 PRODUCT_PACKAGES += \
     libgralloc_extra \
@@ -54,14 +49,14 @@ PRODUCT_PACKAGES += \
     libgui_ext \
     guiext-server \
     librrc
-<<<<<<< HEAD
-=======
-    
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 # Lights
 PRODUCT_PACKAGES += \
     lights.mt6595 \
+
+# Density
+PRODUCT_AAPT_CONFIG := normal
+PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -171,28 +166,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     gps.mt6595 \
     mtk_agpsd \
-<<<<<<< HEAD
-
-# Vibration
-PRODUCT_PACKAGES += \
-    openimmvibed \
-
-
-# Keylayout
-PRODUCT_COPY_FILES += \
-     device/oppo/r7plust/configs/mtk-kpd.kl:system/usr/keylayout/mtk-kpd.kl \
-     device/oppo/r7plust/configs/ACCDET.kl:system/usr/keylayout/ACCDET.kl\
-     device/oppo/r7plust/configs/AVRCP.kl:system/usr/keylayout/AVRCP.kl   
-
-# Thermal
-PRODUCT_COPY_FILES += \
-     device/oppo/r7plust/configs/.ht120.mtc:system/etc/.tp/.ht120.mtc \
-     device/oppo/r7plust/configs/thermal.conf:system/etc/.tp/thermal.conf \
-     device/oppo/r7plust/configs/thermal.off.conf:system/etc/.tp/thermal.off.conf \
-     device/oppo/r7plust/configs/.thermal_policy_00:system/etc/.tp/.thermal_policy_00 \
-     device/oppo/r7plust/configs/.thermal_policy_01:system/etc/.tp/.thermal_policy_01 
-=======
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 # Vibration
 PRODUCT_PACKAGES += \
@@ -247,16 +220,13 @@ PRODUCT_COPY_FILES += \
 #    $(LOCAL_PATH)/ramdisk/ueventd.rc:root/ueventd.rc \
 #    $(LOCAL_PATH)/ramdisk/init.environ.rc.in:root/init.environ.rc.in \
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
-    device/oppo/r7plust/configs/android.hardware.microphone.xml:system/etc/permissions/android.hardware.microphone.xml \
+    $(LOCAL_PATH)/configs/android.hardware.microphone.xml:system/etc/permissions/android.hardware.microphone.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.camera.autofocus.xml:system/etc/permissions/android.hardware.camera.autofocus.xml \
-    device/oppo/r7plust/configs/android.hardware.camera.xml:system/etc/permissions/android.hardware.camera.xml \
+    $(LOCAL_PATH)/configs/android.hardware.camera.xml:system/etc/permissions/android.hardware.camera.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
@@ -290,9 +260,9 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml
 
 PRODUCT_COPY_FILES += \
-	device/oppo/r7plust/configs/media_codecs.xml:system/etc/media_codecs.xml \
-	device/oppo/r7plust/configs/media_codecs.xml:system/etc/permissions/media_codecs.xml \
-	device/oppo/r7plust/configs/media_profiles.xml:system/etc/media_profiles.xml
+	$(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
+	$(LOCAL_PATH)/configs/media_codecs.xml:system/etc/permissions/media_codecs.xml \
+	$(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
@@ -305,16 +275,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mtp \
     ro.hardware=mt6795 \
 
-# NFC
-#PRODUCT_PACKAGES += \
-#    com.android.nfc_extras \
-#    Tag
-#PRODUCT_COPY_FILES += \
-#    packages/apps/Nfc/migrate_nfc.txt:system/etc/updatecmds/migrate_nfc.txt \
-#    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
-#    frameworks/native/data/etc/com.nxp.mifare.xml:system/etc/permissions/com.nxp.mifare.xml \
-#    frameworks/native/data/etc/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml
-
 # Ifaddrs
 PRODUCT_PACKAGES += \
     libifaddrs
@@ -324,23 +284,22 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
      ro.adb.secure=0 \
-     ro.secure=1 \
+     ro.secure=0 \
      ro.allow.mock.location=1 \
      ro.debuggable=1 \
      ro.zygote=zygote64_32 \
      camera.disable_zsl_mode=1 \
      ro.mount.fs=EXT4 \
      persist.service.acm.enable=0 \
-     persist.sys.usb.config=mtp,mass_storage \
-     persist.sys.timezone=Asia/Shanghai
+     persist.sys.usb.config=mtp,mass_storage,adb
 
 PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.timezone=Asia/Shanghai \
     ro.kernel.android.checkjni=0 \
     ro.telephony.ril_class=MediaTekRIL \
     ro.telephony.ril.config=fakeiccid  \
     persist.call_recording.enabled=true \
-    persist.call_recording.src=4 \
-    persist.debug.wfd.enable=1
+    persist.call_recording.src=1
 
 PRODUCT_PACKAGES += \
     librs_jni \

@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-# Copyright 2008 Texas Instruments
-#
-#Author(s) Mikkel Christensen (mlc@ti.com) and Ulrik Bech Hald (ubh@ti.com)
-
-#==========================
-# First SIM RIL
-=======
 # Copyright Statement:
 #
 # This software/firmware and related documentation ("MediaTek Software") are
@@ -39,37 +31,25 @@
 # The following software/firmware and/or related documentation ("MediaTek Software")
 # have been modified by MediaTek Inc. All revisions are subject to any receiver's
 # applicable license agreements with MediaTek Inc.
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE:= gsm0710muxd
-<<<<<<< HEAD
-=======
 LOCAL_MULTILIB := 32
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 LOCAL_SRC_FILES:= \
 	src/gsm0710muxd.c \
 	src/gsm0710muxd_fc.c \
 
 LOCAL_SHARED_LIBRARIES := \
-<<<<<<< HEAD
-	libcutils \
-=======
 	libcutils
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 LOCAL_CFLAGS := \
 	-DMUX_ANDROID \
 	-D__CCMNI_SUPPORT__ \
 	-D__MUXD_FLOWCONTROL__ \
 
-<<<<<<< HEAD
-
-LOCAL_CFLAGS += -DMTK_GEMINI
-=======
 ifeq ($(GEMINI),yes)
 	LOCAL_CFLAGS += -DMTK_GEMINI
 else
@@ -78,26 +58,16 @@ else
   endif
 endif
 
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 ifeq ($(MTK_DT_SUPPORT),yes)
     LOCAL_CFLAGS += -DMTK_DT_SUPPORT
 endif
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 ifneq ($(MTK_INTERNAL),yes)
 	LOCAL_CFLAGS += -D__PRODUCTION_RELEASE__
 endif
 
-<<<<<<< HEAD
-LOCAL_CFLAGS += -DMTK_RIL_MD1
-
-LOCAL_C_INCLUDES := $(KERNEL_HEADERS)
-#LOCAL_LDLIBS := -lpthread
-=======
 ifeq ($(MTK_VT3G324M_SUPPORT),yes)
   LOCAL_CFLAGS += -D__ANDROID_VT_SUPPORT__
 endif
@@ -118,43 +88,27 @@ endif
 ifeq ($(MTK_SHARE_MODEM_SUPPORT), 4)
     LOCAL_CFLAGS += -DANDROID_SIM_COUNT_4
 endif
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 include $(BUILD_EXECUTABLE)
 
 #===========================
-<<<<<<< HEAD
-# Second SIM RIL
-
-include $(CLEAR_VARS)
-
-LOCAL_MODULE:= gsm0710muxdmd2
-=======
 include $(CLEAR_VARS)
 
 LOCAL_MODULE:= gsm0710muxdmd2
 LOCAL_MULTILIB := 32
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 LOCAL_SRC_FILES:= \
 	src/gsm0710muxd.c \
 	src/gsm0710muxd_fc.c \
 
 LOCAL_SHARED_LIBRARIES := \
-<<<<<<< HEAD
-	libcutils \
-=======
 	libcutils
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 LOCAL_CFLAGS := \
 	-DMUX_ANDROID \
 	-D__CCMNI_SUPPORT__ \
 	-D__MUXD_FLOWCONTROL__ \
 
-<<<<<<< HEAD
-LOCAL_CFLAGS += -DMTK_GEMINI
-=======
 ifeq ($(GEMINI),yes)
 	LOCAL_CFLAGS += -DMTK_GEMINI
 else
@@ -162,20 +116,11 @@ else
    LOCAL_CFLAGS += -DMTK_GEMINI
   endif
 endif
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 ifeq ($(MTK_DT_SUPPORT),yes)
     LOCAL_CFLAGS += -DMTK_DT_SUPPORT
 endif
 
-<<<<<<< HEAD
-LOCAL_CFLAGS += -DMTK_RIL_MD2
-
-LOCAL_C_INCLUDES := $(KERNEL_HEADERS)
-#LOCAL_LDLIBS := -lpthread
-
-include $(BUILD_EXECUTABLE)
-=======
 
 ifneq ($(MTK_INTERNAL),yes)
 	LOCAL_CFLAGS += -D__PRODUCTION_RELEASE__
@@ -203,4 +148,3 @@ ifeq ($(MTK_SHARE_MODEM_SUPPORT), 4)
 endif
 
 include $(BUILD_EXECUTABLE)
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa

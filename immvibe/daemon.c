@@ -1,10 +1,6 @@
 #define LOG_TAG "OpenImmVibed"
 
 #include <cutils/log.h>
-<<<<<<< HEAD
-=======
-#include <selinux/android.h>
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 
 #include <stdio.h>
 #include <stdint.h>
@@ -50,11 +46,7 @@ static void *worker_thread_proc(void *arg)
 
 		switch (msg.msgtype) {
 			case MSG_VIBRATE: {
-<<<<<<< HEAD
-				int duration = (int)msg.data;
-=======
 				int duration = *(int *)msg.data;
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 				uint8_t force = immvibe_api_get_force_userspace();
 				ALOGV("worker: vibrate(duration=%d, force=%d)", duration, force);
 
@@ -94,16 +86,11 @@ static void process_buf(const char *buf, int count __attribute__((unused)))
 				ALOGW("process_buf: malformed vibrate request");
 				return;
 			}
-<<<<<<< HEAD
 
-			ALOGV("process_buf: vibrate(duration=%d)", duration);
-			thread_queue_add(&work_queue, (void *)duration, MSG_VIBRATE);
-=======
                         void * durationcode;
 			ALOGV("process_buf: vibrate(duration=%d)", duration);
                         durationcode = &duration;
 			thread_queue_add(&work_queue, durationcode, MSG_VIBRATE);
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 			break;
 		}
 
@@ -169,11 +156,6 @@ static int init_socket(void)
 		goto bail;
 	}
 
-<<<<<<< HEAD
-=======
-	selinux_android_restorecon(IMMVIBED_SOCK_PATH, 0);
-
->>>>>>> 21440836ef59070a7f4df7ccaa54e39a50ff9faa
 	ret = set_nonblock(fd);
 	if (ret) {
 		goto bail;

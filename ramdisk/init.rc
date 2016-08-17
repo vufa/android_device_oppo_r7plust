@@ -10,8 +10,8 @@ import /init.${ro.hardware}.rc
 import /init.usb.configfs.rc
 import /init.${ro.zygote}.rc
 import /init.trace.rc
-# Include CM's extra init file
-import /init.cm.rc
+# Include MK's extra init file
+import /init.mk.rc
 
 
 on early-init
@@ -248,6 +248,7 @@ on late-init
     trigger early-fs
     trigger fs
     trigger post-fs
+    trigger post-fs-data
 
     # Load properties from /system/ + /factory after fs mount. Place
     # this in another action so that the load will be scheduled after the prior
@@ -356,6 +357,10 @@ on post-fs-data
     mkdir /data/misc/perfprofd 0775 root root
     # give system access to wpa_supplicant.conf for backup and restore
     chmod 0660 /data/misc/wifi/wpa_supplicant.conf
+	#ifdef VENDOR_EDIT
+	#Yadong.Hu@Prd.Svc.Wifi, 2014/11/26, Add for chown wifi in the time of init
+	chown system wifi /data/misc/wifi/wpa_supplicant.conf
+	#endif
     mkdir /data/local 0751 root root
     mkdir /data/misc/media 0700 media media
     mkdir /data/misc/vold 0700 root root
@@ -497,11 +502,16 @@ on boot
     chown system system /sys/class/timed_output/vibrator/enable
     chown system system /sys/class/leds/keyboard-backlight/brightness
     chown system system /sys/class/leds/lcd-backlight/brightness
+#ifdef VENDOR_EDIT
+# Xinqin.Yang@PhoneSW.Multimedia, 2015/06/05  Add for silence mode
+    chown system system /sys/devices/virtual/mtk_disp_mgr/mtk_disp_mgr/silence
+#endif /*VENDOR_EDIT*/
     chown system system /sys/class/leds/button-backlight/brightness
     chown system system /sys/class/leds/jogball-backlight/brightness
     chown system system /sys/class/leds/red/brightness
     chown system system /sys/class/leds/green/brightness
     chown system system /sys/class/leds/blue/brightness
+    chown system system /sys/class/leds/white/brightness
     chown system system /sys/class/leds/red/device/grpfreq
     chown system system /sys/class/leds/red/device/grppwm
     chown system system /sys/class/leds/red/device/blink
@@ -694,8 +704,13 @@ service drm /system/bin/drmserver
 
 service media /system/bin/mediaserver
     class main
-    user media
-    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm qcom_diag
+    user root ####
+#   google default ####
+#   user media    ####
+    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm media sdcard_r system net_bt_stack ####
+#   google default ####
+#   group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm ####
+
     ioprio rt 4
 
 # One shot invocation to deal with encrypted volume.
@@ -715,7 +730,8 @@ service encrypt /system/bin/vdc --wait cryptfs enablecrypto inplace default noui
 service bootanim /system/bin/bootanimation
     class core
     user graphics
-    group graphics audio
+#    group graphics audio ####
+    group graphics media audio ####
     disabled
     oneshot
     writepid /dev/cpuset/system-background/tasks
@@ -727,15 +743,6 @@ service gatekeeperd /system/bin/gatekeeperd /data/misc/gatekeeper
 service installd /system/bin/installd
     class main
     socket installd stream 600 system system
-
-service flash_recovery /system/bin/install-recovery.sh
-    class main
-    oneshot
-    disabled
-
-# update recovery if enabled
-on property:persist.sys.recovery_update=true
-    start flash_recovery
 
 service racoon /system/bin/racoon
     class main

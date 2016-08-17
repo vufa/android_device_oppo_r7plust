@@ -16,4 +16,19 @@ BOARD_HAS_LARGE_FILESYSTEM := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun/file
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := r7plust
+TARGET_OTA_ASSERT_DEVICE := r7plus,r7plust,R7Plus,R7Plust
+
+#TWRP
+DEVICE_RESOLUTION := 1080x1920
+#TW_THEME := portrait_hdpi
+#RECOVERY_VARIANT := twrp
+TW_USE_TOOLBOX := true
+TW_EXTRA_LANGUAGES := true
+TW_DEFAULT_LANGUAGE := zh_CN
+TW_NO_REBOOT_BOOTLOADER := true
+BOARD_HAS_NO_REAL_SDCARD := true
+RECOVERY_SDCARD_ON_DATA := true
+TW_NO_USB_STORAGE := false
+RECOVERY_GRAPHICS_USE_LINELENGTH := true
+TW_BRIGHTNESS_PATH := "/sys/devices/mtk-msdc.0/subsystem/drivers/leds-mt67xx/leds/lcd-backlight/brightness"
+TW_CUSTOM_CPU_TEMP_PATH := /sys/devices/virtual/thermal/thermal_zone1/temp
