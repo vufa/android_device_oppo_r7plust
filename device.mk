@@ -54,6 +54,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     lights.mt6595 \
 
+# Density
+PRODUCT_AAPT_CONFIG := normal
+PRODUCT_AAPT_PREF_CONFIG := xxhdpi
+
 # Audio
 PRODUCT_PACKAGES += \
     audio.r_submix.default \
