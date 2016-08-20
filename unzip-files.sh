@@ -7,7 +7,7 @@ if [ "x$UPDATE_PACKAGE" = "x" ]; then
     exit
 fi
 
-BASE=../../../vendor/oppo/r7plust/proprietary
+BASE=../../../vendor/BLU/BLU_PURE_XL/proprietary
 rm -rf $BASE/*
 
 for FILE in `egrep -v '(^#|^$)' proprietary-blobs.txt`; do
@@ -15,7 +15,7 @@ for FILE in `egrep -v '(^#|^$)' proprietary-blobs.txt`; do
   if [ ! -d $BASE/$DIR ]; then
     mkdir -p $BASE/$DIR
   fi
-  unzip -j -o ${UPDATE_PACKAGE} system/$FILE -d $BASE/$DIR
+  unzip -j -o ${UPDATE_PACKAGE} $FILE -d $BASE/$DIR
 done
 
-./setup-makefiles.sh
+. setup-makefiles.sh
