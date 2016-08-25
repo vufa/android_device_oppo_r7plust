@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VENDOR=OPPO
+VENDOR=oppo
 DEVICE=r7plust
 OUTDIR=vendor/$VENDOR/$DEVICE
 MAKEFILE=../../../$OUTDIR/$DEVICE-vendor-blobs.mk

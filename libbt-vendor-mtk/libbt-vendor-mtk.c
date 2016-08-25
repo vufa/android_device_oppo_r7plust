@@ -8,9 +8,8 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <bt_vendor_lib.h>
-//#include <bt_hci_lib.h>
+#include <bt_hci_lib.h>
 #include <bt_hci_bdroid.h>
-//#include <utils.h>
 
 /**
  * TODO: check/fix this value. does this make sense for MTK? It is taken from TI
