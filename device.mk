@@ -102,7 +102,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/root/init.rc:root/init.rc \
     $(LOCAL_PATH)/root/init.ssd.rc:root/init.ssd.rc \
     $(LOCAL_PATH)/root/init.xlog.rc:root/init.xlog.rc \
-    $(LOCAL_PATH)/root/ueventd.mt6795.rc:root/ueventd.mt6795.rc 
+    $(LOCAL_PATH)/root/ueventd.mt6795.rc:root/ueventd.mt6795.rc \
+#    $(LOCAL_PATH)/root/ueventd.rc:root/ueventd.rc
 #    $(LOCAL_PATH)/root/init.r7plust.power.rc:root/init.r7plust.power.rc \
    
 

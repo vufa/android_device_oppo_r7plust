@@ -72,6 +72,7 @@ BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --base 0x40078000 --pagesize 2048 --kernel_offset 0x00008000 --ramdisk_offset 0x03f88000 --second_offset 0x00e88000 --tags_offset 0x0df88000 --board Bule
 TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/prebuilt/kernel
+#BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/bootimg.mk
 
 TARGET_KMODULES := true
 COMMON_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
@@ -196,4 +197,4 @@ $(shell mkdir -p $(OUT)/obj/KERNEL_OBJ/usr)
 # SELinux
 BOARD_SEPOLICY_DIRS := \
        $(LOCAL_PATH)/sepolicy
-#POLICYVERS := 29
+POLICYVERS := 29
